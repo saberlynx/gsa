@@ -182,8 +182,8 @@ const TaskDialog = ({
   ...data
 }) => {
   const scanner = get_scanner(scanners, scanner_id);
-  const scanner_type = isDefined(scanner) ? scanner.scannerType : undefined;
-
+  const scanner_type = isDefined(scanner) ? scanner.type : undefined;
+  console.log(scanner);
   const [configType, setConfigType] = useState('openvas');
   const [prevConfigType, setPrevConfigType] = useState('openvas');
 
@@ -192,7 +192,7 @@ const TaskDialog = ({
     // eslint-disable-next-line no-shadow
     const scanner = get_scanner(scanners, value);
     // eslint-disable-next-line no-shadow
-    const scanner_type = isDefined(scanner) ? scanner.scannerType : undefined;
+    const scanner_type = isDefined(scanner) ? scanner.type : undefined;
 
     if (
       scanner_type === OPENVAS_SCANNER_TYPE ||

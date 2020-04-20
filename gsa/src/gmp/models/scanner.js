@@ -95,14 +95,8 @@ class Scanner extends Model {
   static parseElement(element) {
     const ret = super.parseElement(element);
 
-    if (hasValue(element.uuid) && !hasValue(element.id)) {
-      ret.id = element.uuid;
-    }
-
-    if (hasValue(element.scannerType)) {
-      ret.scannerType = scannerTypeInt(element.scannerType);
-    } else {
-      ret.scannerType = parseInt(element.type);
+    if (hasValue(element.type)) {
+      ret.type = scannerTypeInt(element.type);
     }
 
     ret.credential =
@@ -173,17 +167,14 @@ class Scanner extends Model {
   }
 
   isClonable() {
-    return (
-      this.scannerType !== CVE_SCANNER_TYPE &&
-      this.scannerType !== OPENVAS_SCANNER_TYPE
-    );
+    return this.type !== CVE_SCANNER_TYPE && this.type !== OPENVAS_SCANNER_TYPE;
   }
 
   isWritable() {
     return (
       super.isWritable() &&
-      this.scannerType !== CVE_SCANNER_TYPE &&
-      this.scannerType !== OPENVAS_SCANNER_TYPE
+      this.type !== CVE_SCANNER_TYPE &&
+      this.type !== OPENVAS_SCANNER_TYPE
     );
   }
 
