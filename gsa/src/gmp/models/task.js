@@ -194,7 +194,7 @@ class Task extends Model {
       delete copy.scanner;
     }
 
-    if (hasValue(object.schedule) && !isEmpty(object.schedule.uuid)) {
+    if (hasValue(object.schedule)) {
       copy.schedule = Schedule.fromObject(object.schedule);
     } else {
       delete copy.schedule;
