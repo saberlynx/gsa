@@ -226,7 +226,7 @@ export const MODIFY_TASK = gql`
       alterable: $alterable
       comment: $comment
     ) {
-      taskId
+      id
     }
   }
 `;
