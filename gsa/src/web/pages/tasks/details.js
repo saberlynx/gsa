@@ -164,7 +164,7 @@ class TaskDetails extends React.Component {
                 </TableRow>
                 <TableRow>
                   <TableData>{_('Type')}</TableData>
-                  <TableData>{scannerTypeName(scanner.scannerType)}</TableData>
+                  <TableData>{scannerTypeName(scanner.type)}</TableData>
                 </TableRow>
                 {hasValue(config) && (
                   <TableRow>
