@@ -106,7 +106,7 @@ const Row = ({
             {entity.alterable === 1 && (
               <AlterableIcon size="small" title={_('Audit is alterable')} />
             )}
-            {isDefined(scanner) && scanner.scannerType === GMP_SCANNER_TYPE && (
+            {isDefined(scanner) && scanner.type === GMP_SCANNER_TYPE && (
               <SensorIcon
                 size="small"
                 title={_('Audit is configured to run on sensor {{name}}', {
