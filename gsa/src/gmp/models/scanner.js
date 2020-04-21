@@ -95,8 +95,16 @@ class Scanner extends Model {
   static parseElement(element) {
     const ret = super.parseElement(element);
 
-    if (hasValue(element.type)) {
+    if (hasValue(element.id)) {
+      ret.id = element.id;
+    } else {
+      ret.id = element._id;
+    }
+
+    if (isString(element.type)) {
       ret.type = scannerTypeInt(element.type);
+    } else {
+      ret.type = element.type;
     }
 
     ret.credential =
