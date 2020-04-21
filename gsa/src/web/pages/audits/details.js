@@ -103,6 +103,7 @@ class AuditDetails extends React.Component {
       dur = _('No scans yet');
     }
 
+    console.log(scanner);
     const hasAvDuration = isDefined(average_duration) && average_duration > 0;
     const avDuration = hasAvDuration ? average_duration.humanize() : '';
 
@@ -150,7 +151,7 @@ class AuditDetails extends React.Component {
                 </TableRow>
                 <TableRow>
                   <TableData>{_('Type')}</TableData>
-                  <TableData>{scannerTypeName(scanner.scannerType)}</TableData>
+                  <TableData>{scannerTypeName(scanner.type)}</TableData>
                 </TableRow>
                 {isDefined(config) && (
                   <TableRow>
@@ -322,10 +323,7 @@ const mapDispatchToProps = (dispatch, {gmp}) => ({
 
 export default compose(
   withGmp,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
+  connect(mapStateToProps, mapDispatchToProps),
 )(AuditDetails);
 
 // vim: set ts=2 sw=2 tw=80:

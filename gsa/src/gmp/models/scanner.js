@@ -101,7 +101,7 @@ class Scanner extends Model {
       ret.id = element._id;
     }
 
-    if (isString(element.type)) {
+    if (isString(element.type) && element.type.length > 1) {
       ret.type = scannerTypeInt(element.type);
     } else {
       ret.type = element.type;
