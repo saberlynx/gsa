@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {Provider as StoreProvider} from 'react-redux';
 
@@ -83,6 +83,7 @@ const client = new ApolloClient({
 });
 
 const initStore = () => {
+  console.log('initStore run!');
   const {timezone, username} = gmp.settings;
 
   if (isDefined(timezone)) {
@@ -94,49 +95,44 @@ const initStore = () => {
   store.dispatch(setIsLoggedIn(gmp.isLoggedIn()));
 };
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.handleLogout = this.handleLogout.bind(this);
-  }
-
-  componentDidMount() {
-    this.unsubscribeFromLogout = gmp.subscribeToLogout(this.handleLogout);
-
-    initStore();
-  }
-
-  componentWillUnmount() {
-    if (isDefined(this.unsubscribeFromLogout)) {
-      this.unsubscribeFromLogout();
-    }
-  }
-
-  handleLogout() {
+const App = props => {
+  const handleLogout = () => {
+    console.log('handleLogout run!');
     // cleanup store
     clearStore(store.dispatch);
-  }
+  };
 
-  render() {
-    return (
-      <React.Fragment>
-        <GlobalStyles />
-        <ErrorBoundary message={_('An error occurred on this page')}>
-          <ApolloProvider client={client}>
-            <GmpContext.Provider value={gmp}>
-              <StoreProvider store={store}>
-                <LocaleObserver>
-                  <Routes />
-                </LocaleObserver>
-              </StoreProvider>
-            </GmpContext.Provider>
-          </ApolloProvider>
-        </ErrorBoundary>
-      </React.Fragment>
-    );
-  }
-}
+  useEffect(() => {
+    console.log('App cDM run!');
+
+    const unsubscribeFromLogout = gmp.subscribeToLogout(handleLogout);
+    initStore();
+
+    return () => {
+      console.log('cWU called!');
+      if (isDefined(unsubscribeFromLogout)) {
+        unsubscribeFromLogout();
+      }
+    };
+  }, []);
+
+  return (
+    <React.Fragment>
+      <GlobalStyles />
+      <ErrorBoundary message={_('An error occurred on this page')}>
+        <ApolloProvider client={client}>
+          <GmpContext.Provider value={gmp}>
+            <StoreProvider store={store}>
+              <LocaleObserver>
+                <Routes />
+              </LocaleObserver>
+            </StoreProvider>
+          </GmpContext.Provider>
+        </ApolloProvider>
+      </ErrorBoundary>
+    </React.Fragment>
+  );
+};
 
 export default App;
 
