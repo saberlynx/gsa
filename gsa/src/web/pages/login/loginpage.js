@@ -168,6 +168,7 @@ const LoginPage = () => {
 
           // must be set before changing the location
           setIsLoggedIn(true);
+          gmp.setGqlAuthenticated(true);
 
           history.replace('/tasks'); // always redirect to tasks for demo purposes. This should be changed to '/' once hyperion is no longer in demo.
         })
@@ -213,7 +214,8 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      history.replace('/');
+      console.log('loginpage run');
+      history.replace('/tasks');
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

@@ -25,6 +25,7 @@ import {isDefined} from 'gmp/utils/identity';
 
 import {setIsLoggedIn} from './store/usersettings/actions';
 import {isLoggedIn} from 'web/store/usersettings/selectors';
+import Loading from 'web/components/loading/loading';
 
 import compose from 'web/utils/compose';
 import PropTypes from 'web/utils/proptypes';
@@ -44,7 +45,9 @@ class Authorized extends React.Component {
 
     this.unsubscribe = gmp.addHttpErrorHandler(this.responseError);
 
-    this.checkIsLoggedIn();
+    if (isDefined(this.props.isLoggedIn)) {
+      this.checkIsLoggedIn();
+    }
   }
 
   componentWillUnmount() {
@@ -61,6 +64,7 @@ class Authorized extends React.Component {
     const {logout} = this.props;
 
     if (xhr.status === 401) {
+      console.log('logout called');
       logout();
       return Promise.resolve(xhr);
     }
@@ -113,10 +117,7 @@ const mapDispatchToProps = (dispatch, {gmp}) => ({
 export default compose(
   withGmp,
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
+  connect(mapStateToProps, mapDispatchToProps),
 )(Authorized);
 
 // vim: set ts=2 sw=2 tw=80:

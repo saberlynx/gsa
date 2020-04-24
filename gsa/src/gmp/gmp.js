@@ -91,6 +91,8 @@ class Gmp {
 
     this._logoutListeners = [];
 
+    this.settings.authenticate = false;
+
     this._initCommands();
   }
 
@@ -126,6 +128,7 @@ class Gmp {
   }
 
   doLogout() {
+    console.log('doLogout run');
     if (this.isLoggedIn()) {
       const url = this.buildUrl('logout');
       const args = {token: this.settings.token};
@@ -158,7 +161,11 @@ class Gmp {
   }
 
   isLoggedIn() {
-    return !isEmpty(this.settings.token);
+    return this.settings.authenticate;
+  }
+
+  setGqlAuthenticated(value) {
+    this.settings.authenticated = value;
   }
 
   subscribeToLogout(listener) {

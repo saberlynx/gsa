@@ -30,6 +30,8 @@ import {
   USER_SETTINGS_SET_LOGGED_IN,
 } from 'web/store/usersettings/actions';
 
+import Loading from 'web/components/loading/loading';
+
 export const reportComposerDefaults = (state = {}, action) => {
   switch (action.type) {
     case USER_SETTINGS_LOAD_REPORT_COMPOSER_DEFAULTS_SUCCESS:
@@ -78,7 +80,7 @@ export const username = (state, action) => {
   }
 };
 
-export const isLoggedIn = (state = false, action) => {
+export const isLoggedIn = (state = true, action) => {
   switch (action.type) {
     case USER_SETTINGS_SET_LOGGED_IN:
       return action.isLoggedIn;

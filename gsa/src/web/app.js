@@ -23,6 +23,8 @@ import {ApolloProvider} from 'react-apollo';
 import {ApolloClient} from 'apollo-client';
 import {createHttpLink} from 'apollo-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
+import {useQuery} from '@apollo/react-hooks';
+import gql from 'graphql-tag';
 
 import Gmp from 'gmp';
 import GmpSettings from 'gmp/gmpsettings';
@@ -92,10 +94,9 @@ const initStore = () => {
   if (isDefined(username)) {
     store.dispatch(setUsername(username));
   }
-  store.dispatch(setIsLoggedIn(gmp.isLoggedIn()));
 };
 
-const App = props => {
+const App = () => {
   const handleLogout = () => {
     console.log('handleLogout run!');
     // cleanup store
