@@ -78,7 +78,7 @@ export const username = (state, action) => {
   }
 };
 
-export const isLoggedIn = (state = true, action) => {
+export const isLoggedIn = (state = false, action) => {
   // if not default to true, the App tries to load Loginpage code and redirects to '/'
   switch (action.type) {
     case USER_SETTINGS_SET_LOGGED_IN:

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {Router, Route, Switch} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
@@ -132,7 +132,7 @@ const HISTORY = createQueryHistory();
 
 const GET_AUTHENTICATION_STATUS = gql`
   query {
-    authenticated
+    isAuthenticated
   }
 `;
 
@@ -146,17 +146,18 @@ const Routes = () => {
   const setIsLoggedIn = value => dispatch(setIsLoggedInAction(value));
 
   const authStatusQuery = useHyperionAuthStatus();
-  const {data} = authStatusQuery();
+  const {data, loading} = authStatusQuery();
+
+  const [doNotLoad, setDoNotLoad] = useState(loading);
 
   useEffect(() => {
     if (isDefined(data)) {
-      console.log(data.authenticated);
-
-      setIsLoggedIn(data.authenticated);
+      setIsLoggedIn(data.isAuthenticated);
+      setDoNotLoad(false);
     }
-  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!isDefined(data)) {
+  if (doNotLoad) {
     return <Loading />;
   }
 
