@@ -401,7 +401,7 @@ const TaskComponent = props => {
         autoDeleteData: auto_delete_data,
         comment,
         configId: config_id,
-        hostsOrdering: hosts_ordering.toUpperCase(),
+        hostsOrdering: hosts_ordering,
         inAssets: in_assets,
         maxChecks: max_checks,
         maxHosts: max_hosts,
