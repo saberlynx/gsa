@@ -396,12 +396,24 @@ const TaskComponent = props => {
       const mutationData = {
         taskId: id,
         name,
-        configId: FULL_AND_FAST_SCAN_CONFIG_ID,
+        configId: config_id,
         scannerId: scanner_id,
         schedulePeriods: schedule_periods,
         targetId: target_id,
         alterable,
         comment,
+        maxChecks: max_checks,
+        maxHosts: max_hosts,
+        sourceIface: source_iface,
+        inAssets: in_assets,
+        minQod: min_qod,
+        hostsOrdering: hosts_ordering,
+        scannerType: scanner_type,
+        autoDelete: auto_delete,
+        autoDeleteData: auto_delete_data,
+        alertIds: alert_ids,
+        applyOverrides: apply_overrides,
+        scheduleId: schedule_id,
       };
 
       return modifyTask(mutationData)
