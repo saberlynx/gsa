@@ -221,15 +221,27 @@ export const useDeleteTask = () => {
 export const MODIFY_TASK = gql`
   mutation modifyTask(
     $taskId: String!
+    $alertIds: [UUID]
+    $alterable: Boolean
+    $autoDelete: String
+    $autoDeleteData: Int
+    $applyOverrides: Int
+    $configId: UUID
+    $hostsOrdering: HostsOrdering
     $name: String
     $targetId: UUID
     $scannerId: UUID
     $schedulePeriods: Int
-    $alterable: Boolean
     $comment: String
   ) {
     modifyTask(
       taskId: $taskId
+      alertIds: $alertIds
+      autoDelete: $autoDelete
+      autoDeleteData: $autoDeleteData
+      applyOverrides: $applyOverrides
+      configId: $configId
+      hostsOrdering: $hostsOrdering
       name: $name
       targetId: $targetId
       scannerId: $scannerId
