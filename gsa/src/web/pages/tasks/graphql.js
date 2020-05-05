@@ -227,12 +227,13 @@ export const MODIFY_TASK = gql`
     $autoDeleteData: Int
     $applyOverrides: Int
     $configId: UUID
-    $hostsOrdering: HostsOrdering
+    $hostsOrdering: String
     $name: String
     $targetId: UUID
     $scannerId: UUID
     $schedulePeriods: Int
     $comment: String
+    $inAssets: Int
   ) {
     modifyTask(
       taskId: $taskId
@@ -248,6 +249,7 @@ export const MODIFY_TASK = gql`
       schedulePeriods: $schedulePeriods
       alterable: $alterable
       comment: $comment
+      inAssets: $inAssets
     ) {
       id
     }
