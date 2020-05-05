@@ -234,6 +234,10 @@ export const MODIFY_TASK = gql`
     $schedulePeriods: Int
     $comment: String
     $inAssets: Int
+    $minQod: Int
+    $maxChecks: Int
+    $maxHosts: Int
+    $sourceIface: String
   ) {
     modifyTask(
       taskId: $taskId
@@ -250,6 +254,10 @@ export const MODIFY_TASK = gql`
       alterable: $alterable
       comment: $comment
       inAssets: $inAssets
+      minQod: $minQod
+      maxChecks: $maxChecks
+      maxHosts: $maxHosts
+      sourceIface: $sourceIface
     ) {
       id
     }
