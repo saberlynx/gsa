@@ -15,9 +15,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react';
+import React, {useCallback} from 'react';
 
-import {connect} from 'react-redux';
+import {connect, useDispatch, useSelector} from 'react-redux';
 
 import {withRouter} from 'react-router-dom';
 
@@ -29,11 +29,10 @@ import withDownload from 'web/components/form/withDownload';
 
 import withDialogNotification from 'web/components/notification/withDialogNotifiaction'; // eslint-disable-line max-len
 
-import {renewSessionTimeout} from 'web/store/usersettings/actions';
-
 import compose from 'web/utils/compose';
 import PropTypes from 'web/utils/proptypes';
 import withGmp from 'web/utils/withGmp';
+import useUserSessionTimeout from 'web/utils/useUserSessionTimeout';
 
 import EntityContainer from './container';
 import Reload, {
@@ -66,35 +65,52 @@ const withEntityContainer = (
     reloadInterval = defaultEntityReloadIntervalFunc,
   },
 ) => Component => {
-  const EntityContainerWrapper = props => (
-    <Reload
-      reloadInterval={() => reloadInterval(props)}
-      reload={(id = props.id) => props.load(id)}
-      name={entityType}
-    >
-      {({reload}) => (
-        <EntityContainer {...props} entityType={entityType} reload={reload}>
-          {cprops => <Component {...cprops} />}
-        </EntityContainer>
-      )}
-    </Reload>
-  );
+  const EntityContainerWrapper = props => {
+    const {gmp, id} = props;
+    const [, renewSessionTimeout] = useUserSessionTimeout();
+    const dispatch = useDispatch();
+    const loadEntity = useCallback(
+      (entityId = id) => dispatch(load(gmp)(entityId)),
+      [dispatch, gmp, load, id],
+    );
+
+    const entitySel = useSelector(entitySelector);
+    const isLoading = entitySel.isLoadingEntity(id);
+    const entity = entitySel.getEntity(id);
+    const entityError = entitySel.getEntityError(id);
+
+    return (
+      <Reload
+        reloadInterval={() => reloadInterval(props)}
+        reload={(entityId = id) => loadEntity(entityId)}
+        name={entityType}
+      >
+        {({reload}) => (
+          <EntityContainer
+            {...props}
+            isLoading={isLoading}
+            entity={entity}
+            entityError={entityError}
+            onInteraction={renewSessionTimeout}
+            entityType={entityType}
+            reload={reload}
+          >
+            {cprops => <Component {...cprops} />}
+          </EntityContainer>
+        )}
+      </Reload>
+    );
+  };
 
   EntityContainerWrapper.propTypes = {
     id: PropTypes.id.isRequired,
     load: PropTypes.func.isRequired,
   };
 
-  const mapDispatchToProps = (dispatch, {gmp}) => ({
-    onInteraction: () => dispatch(renewSessionTimeout(gmp)()),
-    load: id => dispatch(load(gmp)(id)),
-  });
-
   const mapStateToProps = (rootState, {gmp, id, match, ...props}) => {
     if (!isDefined(id)) {
       id = decodeURIComponent(match.params.id); // decodeURIComponent needs to be done for CPE IDs
     }
-    const entitySel = entitySelector(rootState);
     const otherProps = isDefined(componentMapStateToProps)
       ? componentMapStateToProps(rootState, {
           gmp,
@@ -103,11 +119,8 @@ const withEntityContainer = (
         })
       : undefined;
     return {
-      isLoading: entitySel.isLoadingEntity(id),
       ...otherProps,
       id,
-      entity: entitySel.getEntity(id),
-      entityError: entitySel.getEntityError(id),
     };
   };
 
@@ -116,10 +129,7 @@ const withEntityContainer = (
     withRouter,
     withDialogNotification,
     withDownload,
-    connect(
-      mapStateToProps,
-      mapDispatchToProps,
-    ),
+    connect(mapStateToProps, undefined),
   )(EntityContainerWrapper);
 };
 
