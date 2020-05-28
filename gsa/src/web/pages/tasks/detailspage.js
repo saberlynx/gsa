@@ -102,6 +102,7 @@ import {
 import PropTypes from 'web/utils/proptypes';
 import {renderYesNo} from 'web/utils/render';
 import withComponentDefaults from 'web/utils/withComponentDefaults';
+import {goto_entity_details} from 'web/utils/graphql';
 
 import ImportReportIcon from './icons/importreporticon';
 import NewIconMenu from './icons/newiconmenu';
@@ -114,11 +115,6 @@ import TaskDetails from './details';
 import TaskStatus from './status';
 import TaskComponent from './component';
 import {useGetTask, useCloneTask, useStartTask, useDeleteTask} from './graphql';
-
-const goto_task_details = (op, props) => result => {
-  const {history} = props;
-  return history.push('/task/' + result.data[op].taskId);
-};
 
 export const ToolBarIcons = ({
   entity,
@@ -167,13 +163,13 @@ export const ToolBarIcons = ({
         <CloneIcon
           entity={entity}
           name="task"
-          onClick={() => onTaskCloneClick({taskId: entity.id})}
+          onClick={() => onTaskCloneClick({id: entity.id})}
         />
         <EditIcon entity={entity} name="task" onClick={onTaskEditClick} />
         <TrashIcon
           entity={entity}
           name="task"
-          onClick={() => onTaskDeleteClick({taskId: entity.id})}
+          onClick={() => onTaskDeleteClick({id: entity.id})}
         />
         <ExportIcon
           value={entity}
@@ -338,13 +334,13 @@ Details.propTypes = {
 };
 
 const Page = props => {
-  const {id: taskId} = useParams();
+  const {id} = useParams();
   const query = useGetTask();
-  const {data, refetch, loading} = query({taskId});
+  const {data, refetch, loading} = query({id});
 
   const clone = useCloneTask();
   const cloneTask = vars =>
-    clone(vars).then(goto_task_details('cloneTask', props));
+    clone(vars).then(goto_entity_details('task', 'cloneTask', props));
 
   const start = useStartTask();
   const startTask = vars => start(vars).then(refetch);
@@ -379,8 +375,12 @@ const Page = props => {
     <TaskComponent
       onCloned={onChanged}
       onCloneError={onError}
-      onCreated={goto_task_details('createTask', props)}
-      onContainerCreated={goto_task_details('createContainerTask', props)}
+      onCreated={goto_entity_details('task', 'createTask', props)}
+      onContainerCreated={goto_entity_details(
+        'task',
+        'createContainerTask',
+        props,
+      )}
       onContainerSaved={refetch}
       onDeleted={goto_list('tasks', props)}
       onDeleteError={onError}
