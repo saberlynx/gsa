@@ -164,16 +164,8 @@ const TaskComponent = props => {
   const [alert_ids, setAlertIds] = useState([]);
   const [schedule_id, setScheduleId] = useState('0');
   const [scanner_id, setScannerId] = useState('0');
-  const [hosts_ordering, setHostsOrdering] = useState();
   const [hosts] = useState();
-  const [port_list_id, setPortListId] = useState(defaultPortListId);
-  const [alert_id, setAlertId] = useState(defaultAlertId);
   const [config_id, setConfigId] = useState(defaultScanConfigId);
-  const [ssh_credential, setSshCredential] = useState(defaultSshCredential);
-  const [smb_credential, setSmbCredential] = useState(defaultSmbCredential);
-  const [esxi_credential, setEsxiCredential] = useState(defaultEsxiCredential);
-  const [task_name, setTaskName] = useState(_('New Quick Task'));
-  const [target_hosts, setTargetHosts] = useState();
 
   const [start_date, setStartDate] = useState();
   const [start_minute, setStartMinute] = useState();
@@ -554,14 +546,18 @@ const TaskComponent = props => {
     gmp.wizard.task().then(response => {
       const settings = response.data;
       toggleTaskWizardVisible(true);
-      setHostsOrdering(settings.client_address);
-      setPortListId(defaultPortListId);
-      setAlertId(defaultAlertId);
-      setConfigId(defaultScanConfigId);
-      setSshCredential(defaultSshCredential);
-      setSmbCredential(defaultSmbCredential);
-      setEsxiCredential(defaultEsxiCredential);
-      setScannerId(defaultScannerId);
+
+      setDialogState(state => ({
+        ...state,
+        hosts_ordering: settings.client_address,
+        port_list_id: defaultPortListId,
+        alert_id: defaultAlertId,
+        config_id: defaultScanConfigId,
+        ssh_credential: defaultSshCredential,
+        smb_credential: defaultSmbCredential,
+        esxi_credential: defaultEsxiCredential,
+        scanner_id: defaultScannerId,
+      }));
     });
     handleInteraction();
   };
@@ -604,19 +600,22 @@ const TaskComponent = props => {
       const now = date().tz(timezone);
 
       toggleAdvancedTaskWizardVisible(true);
-      setTaskName(_('New Quick Task'));
-      setTargetHosts(settings.client_address);
-      setPortListId(defaultPortListId);
-      setAlertId(defaultAlertId);
-      setConfigId(defaultScanConfigId);
-      setSshCredential(defaultSshCredential);
-      setSmbCredential(defaultSmbCredential);
-      setEsxiCredential(defaultEsxiCredential);
-      setScannerId(defaultScannerId);
-      setStartDate(now);
-      setStartMinute(now.minutes());
-      setStartHour(now.hours());
-      setTimezone(timezone);
+      setDialogState(state => ({
+        ...state,
+        // alert: defaultAlertId,
+        task_name: _('New Quick Task'),
+        target_hosts: settings.client_address,
+        port_list_id: defaultPortListId,
+        config_id: defaultScanConfigId,
+        ssh_credential: defaultSshCredential,
+        smb_credential: defaultSmbCredential,
+        esxi_credential: defaultEsxiCredential,
+        scanner_id: defaultScannerId,
+        start_date: now,
+        start_minute: now.minutes(),
+        start_hour: now.hours(),
+        timezone,
+      }));
     });
     handleInteraction();
   };
@@ -752,6 +751,14 @@ const TaskComponent = props => {
     task,
     title,
     name,
+    hosts_ordering,
+    port_list_id,
+    alert_id,
+    ssh_credential,
+    smb_credential,
+    esxi_credential,
+    task_name,
+    target_hosts,
   } = dialogState;
 
   return (
