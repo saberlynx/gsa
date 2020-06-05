@@ -239,7 +239,12 @@ const TagComponent = ({
   }) => {
     handleInteraction();
 
-    console.log('dummy save tag');
+    if (!isDefined(id)) {
+      console.log('graphql create tag');
+    } else {
+      console.log('graphql modify tag');
+    }
+    closeTagDialog();
   };
 
   const {
@@ -272,7 +277,7 @@ const TagComponent = ({
       onSaved={onSaved}
       onSaveError={onSaveError}
     >
-      {({save, ...other}) => (
+      {({other}) => (
         <React.Fragment>
           {children({
             ...other,
@@ -282,6 +287,7 @@ const TagComponent = ({
             enable: handleEnableTag,
             disable: handleDisableTag,
             remove: handleRemove,
+            save: handleSaveTag,
           })}
           {dialogVisible && (
             <TagDialog
@@ -296,10 +302,7 @@ const TagComponent = ({
               title={title}
               value={value}
               onClose={handleCloseTagDialog}
-              onSave={d => {
-                handleInteraction();
-                return save(d).then(() => closeTagDialog());
-              }}
+              onSave={handleSaveTag}
               {...options}
             />
           )}
