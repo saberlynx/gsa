@@ -28,9 +28,9 @@ import {getEntityType, pluralizeType, typeName} from 'gmp/utils/entitytype';
 import {YES_VALUE} from 'gmp/parser';
 
 import PropTypes from 'web/utils/proptypes';
-import compose from 'web/utils/compose';
-import withGmp from 'web/utils/withGmp';
-import withCapabilities from 'web/utils/withCapabilities';
+
+import useGmp from 'web/utils/useGmp';
+import useCapabilities from 'web/utils/useCapabilities';
 
 import EntityComponent from 'web/entity/component';
 
@@ -70,10 +70,13 @@ const TYPES = [
 ];
 
 const TagComponent = props => {
+  const gmp = useGmp();
+  const capabilities = useCapabilities();
+
   const [state, setState] = useState({dialogVisible: false});
 
   const handleEnableTag = tag => {
-    const {gmp, onEnabled, onEnableError} = props;
+    const {onEnabled, onEnableError} = props;
 
     handleInteraction();
 
@@ -81,7 +84,7 @@ const TagComponent = props => {
   };
 
   const handleDisableTag = tag => {
-    const {gmp, onDisabled, onDisableError} = props;
+    const {onDisabled, onDisableError} = props;
 
     handleInteraction();
 
@@ -89,7 +92,7 @@ const TagComponent = props => {
   };
 
   const handleAddTag = ({name, value, entity}) => {
-    const {gmp, onAdded, onAddError} = props;
+    const {onAdded, onAddError} = props;
 
     handleInteraction();
 
@@ -105,14 +108,12 @@ const TagComponent = props => {
   };
 
   const getResourceTypes = () => {
-    const {capabilities} = props;
     return TYPES.map(type =>
       capabilities.mayAccess(type) ? [type, typeName(type)] : undefined,
     ).filter(isDefined);
   };
 
   const openTagDialog = (tag, options = {}) => {
-    const {gmp} = props;
     const resource_types = getResourceTypes();
 
     if (isDefined(tag)) {
@@ -130,7 +131,7 @@ const TagComponent = props => {
         gmp[pluralizeType(resourceType)].get({filter}).then(resp => {
           const resources = resp.data;
           setState(prevState => ({
-            prevState,
+            ...prevState,
             active,
             comment,
             dialogVisible: true,
@@ -185,7 +186,7 @@ const TagComponent = props => {
   };
 
   const handleRemove = (tag_id, entity) => {
-    const {gmp, onRemoved, onRemoveError} = props;
+    const {onRemoved, onRemoveError} = props;
 
     handleInteraction();
 
@@ -294,9 +295,7 @@ const TagComponent = props => {
 };
 
 TagComponent.propTypes = {
-  capabilities: PropTypes.capabilities.isRequired,
   children: PropTypes.func.isRequired,
-  gmp: PropTypes.gmp.isRequired,
   onAddError: PropTypes.func,
   onAdded: PropTypes.func,
   onCloneError: PropTypes.func,
@@ -318,6 +317,6 @@ TagComponent.propTypes = {
   onSaved: PropTypes.func,
 };
 
-export default compose(withGmp, withCapabilities)(TagComponent);
+export default TagComponent;
 
 // vim: set ts=2 sw=2 tw=80:
