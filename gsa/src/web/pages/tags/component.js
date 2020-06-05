@@ -69,31 +69,46 @@ const TYPES = [
   'user',
 ];
 
-const TagComponent = props => {
+const TagComponent = ({
+  children,
+  onAdded,
+  onAddError,
+  onCloned,
+  onCloneError,
+  onCreated,
+  onCreateError,
+  onEnabled,
+  onEnableError,
+  onDeleted,
+  onDeleteError,
+  onDisabled,
+  onDisableError,
+  onDownloaded,
+  onDownloadError,
+  onInteraction,
+  onRemoved,
+  onRemoveError,
+  onSaved,
+  onSaveError,
+}) => {
   const gmp = useGmp();
   const capabilities = useCapabilities();
 
   const [state, setState] = useState({dialogVisible: false});
 
   const handleEnableTag = tag => {
-    const {onEnabled, onEnableError} = props;
-
     handleInteraction();
 
     gmp.tag.enable(tag).then(onEnabled, onEnableError);
   };
 
   const handleDisableTag = tag => {
-    const {onDisabled, onDisableError} = props;
-
     handleInteraction();
 
     gmp.tag.disable(tag).then(onDisabled, onDisableError);
   };
 
   const handleAddTag = ({name, value, entity}) => {
-    const {onAdded, onAddError} = props;
-
     handleInteraction();
 
     return gmp.tag
@@ -186,8 +201,6 @@ const TagComponent = props => {
   };
 
   const handleRemove = (tag_id, entity) => {
-    const {onRemoved, onRemoveError} = props;
-
     handleInteraction();
 
     return gmp.tag
@@ -205,27 +218,10 @@ const TagComponent = props => {
   };
 
   const handleInteraction = () => {
-    const {onInteraction} = props;
-
     if (isDefined(onInteraction)) {
       onInteraction();
     }
   };
-
-  const {
-    children,
-    onCloned,
-    onCloneError,
-    onCreated,
-    onCreateError,
-    onDeleted,
-    onDeleteError,
-    onDownloaded,
-    onDownloadError,
-    onInteraction,
-    onSaved,
-    onSaveError,
-  } = props;
 
   const {
     active,
