@@ -27,6 +27,8 @@ import {getEntityType, pluralizeType, typeName} from 'gmp/utils/entitytype';
 
 import {YES_VALUE} from 'gmp/parser';
 
+import {useCreateTags} from 'web/graphql/tags';
+
 import PropTypes from 'web/utils/proptypes';
 
 import useGmp from 'web/utils/useGmp';
