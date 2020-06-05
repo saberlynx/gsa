@@ -223,6 +223,23 @@ const TagComponent = ({
     }
   };
 
+  const handleSaveTag = ({
+    id,
+    name,
+    comment = '',
+    active,
+    filter,
+    resource_id = '',
+    resource_ids = [resource_id],
+    resource_type,
+    resources_action,
+    value = '',
+  }) => {
+    handleInteraction();
+
+    console.log('dummy save tag');
+  };
+
   const {
     active,
     comment,
