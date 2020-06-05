@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 
 import _ from 'gmp/locale';
 
@@ -69,41 +69,29 @@ const TYPES = [
   'user',
 ];
 
-class TagComponent extends React.Component {
-  constructor(...args) {
-    super(...args);
+const TagComponent = props => {
+  const [state, setState] = useState({dialogVisible: false});
 
-    this.state = {dialogVisible: false};
+  const handleEnableTag = tag => {
+    const {gmp, onEnabled, onEnableError} = props;
 
-    this.handleCloseTagDialog = this.handleCloseTagDialog.bind(this);
-    this.handleEnableTag = this.handleEnableTag.bind(this);
-    this.handleDisableTag = this.handleDisableTag.bind(this);
-    this.handleAddTag = this.handleAddTag.bind(this);
-    this.handleRemove = this.handleRemove.bind(this);
-    this.openTagDialog = this.openTagDialog.bind(this);
-    this.openCreateTagDialog = this.openCreateTagDialog.bind(this);
-  }
-
-  handleEnableTag(tag) {
-    const {gmp, onEnabled, onEnableError} = this.props;
-
-    this.handleInteraction();
+    handleInteraction();
 
     gmp.tag.enable(tag).then(onEnabled, onEnableError);
-  }
+  };
 
-  handleDisableTag(tag) {
-    const {gmp, onDisabled, onDisableError} = this.props;
+  const handleDisableTag = tag => {
+    const {gmp, onDisabled, onDisableError} = props;
 
-    this.handleInteraction();
+    handleInteraction();
 
     gmp.tag.disable(tag).then(onDisabled, onDisableError);
-  }
+  };
 
-  handleAddTag({name, value, entity}) {
-    const {gmp, onAdded, onAddError} = this.props;
+  const handleAddTag = ({name, value, entity}) => {
+    const {gmp, onAdded, onAddError} = props;
 
-    this.handleInteraction();
+    handleInteraction();
 
     return gmp.tag
       .create({
@@ -114,18 +102,18 @@ class TagComponent extends React.Component {
         resource_type: getEntityType(entity),
       })
       .then(onAdded, onAddError);
-  }
+  };
 
-  getResourceTypes() {
-    const {capabilities} = this.props;
+  const getResourceTypes = () => {
+    const {capabilities} = props;
     return TYPES.map(type =>
       capabilities.mayAccess(type) ? [type, typeName(type)] : undefined,
     ).filter(isDefined);
-  }
+  };
 
-  openTagDialog(tag, options = {}) {
-    const {gmp} = this.props;
-    const resource_types = this.getResourceTypes();
+  const openTagDialog = (tag, options = {}) => {
+    const {gmp} = props;
+    const resource_types = getResourceTypes();
 
     if (isDefined(tag)) {
       gmp.tag.get({id: tag.id}).then(response => {
@@ -141,7 +129,8 @@ class TagComponent extends React.Component {
         const filter = 'rows=' + SELECT_MAX_RESOURCES + ' tag_id="' + id;
         gmp[pluralizeType(resourceType)].get({filter}).then(resp => {
           const resources = resp.data;
-          this.setState({
+          setState(prevState => ({
+            prevState,
             active,
             comment,
             dialogVisible: true,
@@ -158,11 +147,12 @@ class TagComponent extends React.Component {
             title: _('Edit Tag {{name}}', {name: shorten(name)}),
             value,
             ...options,
-          });
+          }));
         });
       });
     } else {
-      this.setState({
+      setState(prevState => ({
+        ...prevState,
         active: undefined,
         comment: undefined,
         id: undefined,
@@ -175,29 +165,29 @@ class TagComponent extends React.Component {
         title: undefined,
         value: undefined,
         ...options,
-      });
+      }));
     }
 
-    this.handleInteraction();
-  }
+    handleInteraction();
+  };
 
-  closeTagDialog() {
-    this.setState({dialogVisible: false});
-  }
+  const closeTagDialog = () => {
+    setState(prevState => ({...prevState, dialogVisible: false}));
+  };
 
-  handleCloseTagDialog() {
-    this.closeTagDialog();
-    this.handleInteraction();
-  }
+  const handleCloseTagDialog = () => {
+    closeTagDialog();
+    handleInteraction();
+  };
 
-  openCreateTagDialog(options = {}) {
-    this.openTagDialog(undefined, options);
-  }
+  const openCreateTagDialog = (options = {}) => {
+    openTagDialog(undefined, options);
+  };
 
-  handleRemove(tag_id, entity) {
-    const {gmp, onRemoved, onRemoveError} = this.props;
+  const handleRemove = (tag_id, entity) => {
+    const {gmp, onRemoved, onRemoveError} = props;
 
-    this.handleInteraction();
+    handleInteraction();
 
     return gmp.tag
       .get({id: tag_id})
@@ -211,99 +201,97 @@ class TagComponent extends React.Component {
         }),
       )
       .then(onRemoved, onRemoveError);
-  }
+  };
 
-  handleInteraction() {
-    const {onInteraction} = this.props;
+  const handleInteraction = () => {
+    const {onInteraction} = props;
 
     if (isDefined(onInteraction)) {
       onInteraction();
     }
-  }
+  };
 
-  render() {
-    const {
-      children,
-      onCloned,
-      onCloneError,
-      onCreated,
-      onCreateError,
-      onDeleted,
-      onDeleteError,
-      onDownloaded,
-      onDownloadError,
-      onInteraction,
-      onSaved,
-      onSaveError,
-    } = this.props;
+  const {
+    children,
+    onCloned,
+    onCloneError,
+    onCreated,
+    onCreateError,
+    onDeleted,
+    onDeleteError,
+    onDownloaded,
+    onDownloadError,
+    onInteraction,
+    onSaved,
+    onSaveError,
+  } = props;
 
-    const {
-      active,
-      comment,
-      id,
-      name,
-      resource_ids,
-      resource_type,
-      resource_types = [],
-      resourceCount,
-      dialogVisible,
-      title,
-      value,
-      ...options
-    } = this.state;
+  const {
+    active,
+    comment,
+    id,
+    name,
+    resource_ids,
+    resource_type,
+    resource_types = [],
+    resourceCount,
+    dialogVisible,
+    title,
+    value,
+    ...options
+  } = state;
 
-    return (
-      <EntityComponent
-        name="tag"
-        onCreated={onCreated}
-        onCreateError={onCreateError}
-        onCloned={onCloned}
-        onCloneError={onCloneError}
-        onDeleted={onDeleted}
-        onDeleteError={onDeleteError}
-        onDownloaded={onDownloaded}
-        onDownloadError={onDownloadError}
-        onInteraction={onInteraction}
-        onSaved={onSaved}
-        onSaveError={onSaveError}
-      >
-        {({save, ...other}) => (
-          <React.Fragment>
-            {children({
-              ...other,
-              add: this.handleAddTag,
-              create: this.openCreateTagDialog,
-              edit: this.openTagDialog,
-              enable: this.handleEnableTag,
-              disable: this.handleDisableTag,
-              remove: this.handleRemove,
-            })}
-            {dialogVisible && (
-              <TagDialog
-                active={active}
-                comment={comment}
-                id={id}
-                name={name}
-                resource_ids={resource_ids}
-                resource_type={resource_type}
-                resource_types={resource_types}
-                resourceCount={resourceCount}
-                title={title}
-                value={value}
-                onClose={this.handleCloseTagDialog}
-                onSave={d => {
-                  this.handleInteraction();
-                  return save(d).then(() => this.closeTagDialog());
-                }}
-                {...options}
-              />
-            )}
-          </React.Fragment>
-        )}
-      </EntityComponent>
-    );
-  }
-}
+  return (
+    <EntityComponent
+      name="tag"
+      onCreated={onCreated}
+      onCreateError={onCreateError}
+      onCloned={onCloned}
+      onCloneError={onCloneError}
+      onDeleted={onDeleted}
+      onDeleteError={onDeleteError}
+      onDownloaded={onDownloaded}
+      onDownloadError={onDownloadError}
+      onInteraction={onInteraction}
+      onSaved={onSaved}
+      onSaveError={onSaveError}
+    >
+      {({save, ...other}) => (
+        <React.Fragment>
+          {children({
+            ...other,
+            add: handleAddTag,
+            create: openCreateTagDialog,
+            edit: openTagDialog,
+            enable: handleEnableTag,
+            disable: handleDisableTag,
+            remove: handleRemove,
+          })}
+          {dialogVisible && (
+            <TagDialog
+              active={active}
+              comment={comment}
+              id={id}
+              name={name}
+              resource_ids={resource_ids}
+              resource_type={resource_type}
+              resource_types={resource_types}
+              resourceCount={resourceCount}
+              title={title}
+              value={value}
+              onClose={handleCloseTagDialog}
+              onSave={d => {
+                handleInteraction();
+                return save(d).then(() => closeTagDialog());
+              }}
+              {...options}
+            />
+          )}
+        </React.Fragment>
+      )}
+    </EntityComponent>
+  );
+};
 
 TagComponent.propTypes = {
   capabilities: PropTypes.capabilities.isRequired,
@@ -330,9 +318,6 @@ TagComponent.propTypes = {
   onSaved: PropTypes.func,
 };
 
-export default compose(
-  withGmp,
-  withCapabilities,
-)(TagComponent);
+export default compose(withGmp, withCapabilities)(TagComponent);
 
 // vim: set ts=2 sw=2 tw=80:
