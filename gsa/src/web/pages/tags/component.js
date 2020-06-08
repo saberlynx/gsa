@@ -157,9 +157,7 @@ const TagComponent = ({
 
   const getResourceTypes = () => {
     return TYPES.map(type =>
-      capabilities.mayAccess(type[0])
-        ? [type[0], typeName(type[0])]
-        : undefined,
+      capabilities.mayAccess(type) ? [type, typeName(type)] : undefined,
     ).filter(isDefined);
   };
 
@@ -273,9 +271,15 @@ const TagComponent = ({
     handleInteraction();
 
     if (!isDefined(id)) {
-      return createTag({name, resourceType: ENUM_TYPES[resource_type]}).then(
-        closeTagDialog,
-      );
+      return createTag({
+        name,
+        resourceType: ENUM_TYPES[resource_type],
+        comment,
+        resourceFilter: filter,
+        resourceIds: resource_ids,
+        value,
+        active,
+      }).then(closeTagDialog);
     } else {
       console.log('graphql modify tag');
     }
