@@ -27,7 +27,7 @@ import {getEntityType, pluralizeType, typeName} from 'gmp/utils/entitytype';
 
 import {YES_VALUE} from 'gmp/parser';
 
-import {useCreateTags} from 'web/graphql/tags';
+import {useCreateTag} from 'web/graphql/tags';
 
 import PropTypes from 'web/utils/proptypes';
 
@@ -40,6 +40,36 @@ import TagDialog from 'web/pages/tags/dialog';
 
 export const SELECT_MAX_RESOURCES = 200; // concerns items in TagDialog's Select
 export const MAX_RESOURCES = 40; // concerns listing in "Assigned Resources" tab
+
+const ENUM_TYPES = {
+  alert: 'ALERT',
+  host: 'HOST',
+  operatingsystem: 'OPERATING_SYSTEM',
+  cpe: 'CPE',
+  credential: 'CREDENTIAL',
+  cve: 'CVE',
+  certbund: 'CERT_BUND_ADV',
+  dfncert: 'DFN_CERT_ADV',
+  filter: 'FILTER',
+  group: 'GROUP',
+  note: 'NOTE',
+  nvt: 'NVT',
+  ovaldef: 'OVALDEF',
+  override: 'OVERRIDE',
+  permission: 'PERMISSION',
+  portlist: 'PORT_LIST',
+  report: 'REPORT',
+  reportformat: 'REPORT_FORMAT',
+  result: 'RESULT',
+  role: 'ROLE',
+  scanconfig: 'SCAN_CONFIG',
+  scanner: 'SCANNER',
+  schedule: 'SCHEDULE',
+  target: 'TARGET',
+  task: 'TASK',
+  tlscertificate: 'TLS_CERTIFICATE',
+  user: 'USER',
+};
 
 const TYPES = [
   'alert',
@@ -95,6 +125,7 @@ const TagComponent = ({
 }) => {
   const gmp = useGmp();
   const capabilities = useCapabilities();
+  const [createTag] = useCreateTag();
 
   const [state, setState] = useState({dialogVisible: false});
 
@@ -126,7 +157,9 @@ const TagComponent = ({
 
   const getResourceTypes = () => {
     return TYPES.map(type =>
-      capabilities.mayAccess(type) ? [type, typeName(type)] : undefined,
+      capabilities.mayAccess(type[0])
+        ? [type[0], typeName(type[0])]
+        : undefined,
     ).filter(isDefined);
   };
 
@@ -240,7 +273,9 @@ const TagComponent = ({
     handleInteraction();
 
     if (!isDefined(id)) {
-      console.log('graphql create tag');
+      return createTag({name, resourceType: ENUM_TYPES[resource_type]}).then(
+        closeTagDialog,
+      );
     } else {
       console.log('graphql modify tag');
     }
