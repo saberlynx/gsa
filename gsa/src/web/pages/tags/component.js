@@ -261,11 +261,9 @@ const TagComponent = ({
     name,
     comment = '',
     active,
-    filter,
     resource_id = '',
     resource_ids = [resource_id],
     resource_type,
-    resources_action,
     value = '',
   }) => {
     handleInteraction();
@@ -275,7 +273,6 @@ const TagComponent = ({
         name,
         resourceType: ENUM_TYPES[resource_type],
         comment,
-        resourceFilter: filter,
         resourceIds: resource_ids,
         value,
         active,
