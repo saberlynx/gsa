@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {useEffect, useCallback} from 'react';
+import React, {useEffect, useCallback, useState} from 'react';
 
 import _ from 'gmp/locale';
 
@@ -43,6 +43,7 @@ import DialogNotification from 'web/components/notification/dialognotification';
 import useDialogNotification from 'web/components/notification/useDialogNotification';
 
 import EntitiesPage from 'web/entities/page';
+import TagsDialog from 'web/entities/tagsdialog';
 
 import {
   useLazyGetTasks,
@@ -123,6 +124,12 @@ ToolBarIcons.propTypes = {
 const TasksListPage = () => {
   const gmp = useGmp();
 
+  const [tags, setTags] = useState();
+  const [tag, setTag] = useState({});
+  const [tagsDialogVisible, setTagsDialogVisible] = useState(false);
+  const [multiTagTasksCount, setMultiTagTasksCount] = useState({});
+  const [tagsDialogTitle, setTagsDialogTitle] = useState(_('Add Tag'));
+
   const [, renewSession] = useUserSessionTimeout();
   const [filter, isLoadingFilter] = usePageFilter('task');
   const prevFilter = usePrevious(filter);
@@ -197,8 +204,34 @@ const TasksListPage = () => {
     return Promise.all([...idsToDelete]).then(refetch, showError);
   };
 
-  const handleTagTaskBulk = () => {
+  const getMultiTagTasksCount = () => {
+    if (selectionType === SelectionType.SELECTION_USER) {
+      return selected.size;
+    }
+
+    if (selectionType === SelectionType.SELECTION_PAGE_CONTENTS) {
+      return tasks.length;
+    }
+
+    return counts.filtered;
+  };
+
+  const getTaskTags = () => {
+    if (tasks.length > 0) {
+      const filter = 'resource_type=task';
+      gmp.tags.getAll({filter}).then(response => {
+        const {data: tags} = response;
+        setTags(tags);
+      });
+    }
+  };
+
+  const openTagsDialog = () => {
     console.log('tried to bulk tag!');
+    getTaskTags();
+    setTagsDialogVisible(true);
+    setMultiTagTasksCount(getMultiTagTasksCount());
+    renewSession();
   };
 
   useEffect(() => {
@@ -355,7 +388,7 @@ const TasksListPage = () => {
             onReportImportClick={reportimport}
             onSelectionTypeChange={changeSelectionType}
             onSortChange={handleSortChange}
-            onTagsBulk={handleTagTaskBulk}
+            onTagsBulk={openTagsDialog}
             onTaskCloneClick={handleCloneTask}
             onTaskCreateClick={create}
             onTaskDeleteClick={handleDeleteTask}
@@ -371,6 +404,22 @@ const TasksListPage = () => {
             onCloseClick={closeNotificationDialog}
           />
           <Download ref={downloadRef} />
+          {tagsDialogVisible && (
+            <TagsDialog
+              comment={tag.comment}
+              entitiesCount={multiTagTasksCount}
+              filter={filter}
+              name={tag.name}
+              tagId={tag.id}
+              tags={tags}
+              title={tagsDialogTitle}
+              value={tag.value}
+              onClose={() => setTagsDialogVisible(false)}
+              onSave={console.log('foo')}
+              onNewTagClick={console.log('foo')}
+              onTagChanged={console.log('foo')}
+            />
+          )}
         </React.Fragment>
       )}
     </TaskComponent>
