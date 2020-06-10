@@ -22,6 +22,9 @@ import _ from 'gmp/locale';
 
 import {TASKS_FILTER_FILTER} from 'gmp/models/filter';
 
+import {YES_VALUE} from 'gmp/parser';
+
+import {map} from 'gmp/utils/array';
 import {hasValue} from 'gmp/utils/identity';
 
 import DashboardControls from 'web/components/dashboard/controls';
@@ -226,6 +229,49 @@ const TasksListPage = () => {
     }
   };
 
+  const handleTagChange = id => {
+    renewSession();
+
+    gmp.tag.get({id}).then(response => {
+      setTag(response.data);
+    });
+  };
+
+  const closeTagsDialog = () => {
+    setTagsDialogVisible(false);
+  };
+
+  const handleAddMultiTag = ({comment, id, name, value = ''}) => {
+    let resourceIds;
+    let resourceIdsArray;
+    let appliedFilter;
+    if (selectionType === SelectionType.SELECTION_USER) {
+      resourceIds = map(selected, res => res.id);
+      resourceIdsArray = [...resourceIds];
+      appliedFilter = undefined;
+    } else if (selectionType === SelectionType.SELECTION_PAGE_CONTENTS) {
+      appliedFilter = filter;
+    } else {
+      appliedFilter = filter.all();
+    }
+
+    renewSession();
+
+    return gmp.tag
+      .save({
+        active: YES_VALUE,
+        comment,
+        filter: appliedFilter,
+        id,
+        name,
+        resource_ids: resourceIdsArray,
+        resource_type: 'task',
+        resources_action: 'add',
+        value,
+      })
+      .then(() => closeTagsDialog());
+  };
+
   const openTagsDialog = () => {
     console.log('tried to bulk tag!');
     getTaskTags();
@@ -414,10 +460,10 @@ const TasksListPage = () => {
               tags={tags}
               title={tagsDialogTitle}
               value={tag.value}
-              onClose={() => setTagsDialogVisible(false)}
-              onSave={console.log('foo')}
-              onNewTagClick={console.log('foo')}
-              onTagChanged={console.log('foo')}
+              onClose={closeTagsDialog}
+              onSave={handleAddMultiTag}
+              onNewTagClick={console.log('opening new tag dialog')}
+              onTagChanged={handleTagChange}
             />
           )}
         </React.Fragment>
