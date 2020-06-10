@@ -26,6 +26,7 @@ import {YES_VALUE} from 'gmp/parser';
 
 import {map} from 'gmp/utils/array';
 import {hasValue} from 'gmp/utils/identity';
+import {typeName} from 'gmp/utils/entitytype';
 
 import DashboardControls from 'web/components/dashboard/controls';
 
@@ -47,6 +48,7 @@ import useDialogNotification from 'web/components/notification/useDialogNotifica
 
 import EntitiesPage from 'web/entities/page';
 import TagsDialog from 'web/entities/tagsdialog';
+import TagDialog from 'web/pages/tags/dialog';
 
 import {
   useLazyGetTasks,
@@ -132,6 +134,9 @@ const TasksListPage = () => {
   const [tagsDialogVisible, setTagsDialogVisible] = useState(false);
   const [multiTagTasksCount, setMultiTagTasksCount] = useState({});
   const [tagsDialogTitle, setTagsDialogTitle] = useState(_('Add Tag'));
+  const [tagDialogVisible, setTagDialogVisible] = useState(false);
+
+  console.log(tags);
 
   const [, renewSession] = useUserSessionTimeout();
   const [filter, isLoadingFilter] = usePageFilter('task');
@@ -278,6 +283,34 @@ const TasksListPage = () => {
     setTagsDialogVisible(true);
     setMultiTagTasksCount(getMultiTagTasksCount());
     renewSession();
+  };
+
+  const openTagDialog = () => {
+    setTagDialogVisible(true);
+    renewSession();
+  };
+
+  const closeTagDialog = () => {
+    setTagDialogVisible(false);
+  };
+
+  const handleCloseTagDialog = () => {
+    closeTagDialog();
+    renewSession();
+  };
+
+  const handleCreateTag = data => {
+    renewSession();
+
+    return gmp.tag
+      .create(data)
+      .then(response => gmp.tag.get(response.data))
+      .then(response => {
+        closeTagDialog();
+        const newTag = response.data;
+        setTag(newTag);
+        setTags(prevTags => [...prevTags, newTag]);
+      });
   };
 
   useEffect(() => {
@@ -462,8 +495,18 @@ const TasksListPage = () => {
               value={tag.value}
               onClose={closeTagsDialog}
               onSave={handleAddMultiTag}
-              onNewTagClick={console.log('opening new tag dialog')}
+              onNewTagClick={openTagDialog}
               onTagChanged={handleTagChange}
+            />
+          )}
+          {tagDialogVisible && (
+            <TagDialog
+              fixed={true}
+              resources={selected}
+              resource_type={'task'}
+              resource_types={[['task', typeName('task')]]}
+              onClose={handleCloseTagDialog}
+              onSave={handleCreateTag}
             />
           )}
         </React.Fragment>
