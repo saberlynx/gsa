@@ -56,6 +56,7 @@ import SelectionType from 'web/utils/selectiontype';
 import useCapabilities from 'web/utils/useCapabilities';
 import useChangeFilter from 'web/utils/useChangeFilter';
 import useFilterSortBy from 'web/utils/useFilterSortby';
+import useGmp from 'web/utils/useGmp';
 import usePageFilter from 'web/utils/usePageFilter';
 import useSelection from 'web/utils/useSelection';
 import usePrevious from 'web/utils/usePrevious';
@@ -120,6 +121,8 @@ ToolBarIcons.propTypes = {
 };
 
 const TasksListPage = () => {
+  const gmp = useGmp();
+
   const [, renewSession] = useUserSessionTimeout();
   const [filter, isLoadingFilter] = usePageFilter('task');
   const prevFilter = usePrevious(filter);
@@ -166,6 +169,7 @@ const TasksListPage = () => {
   );
 
   const handleDeleteTaskBulk = async () => {
+    // can be its own import e.g. handleGraphqlDeleteBulk = (deleteFunc, entities, selectionType, selected, ...) => {...}
     let idsToDelete = [];
 
     if (selectionType === SelectionType.SELECTION_USER) {
@@ -191,6 +195,10 @@ const TasksListPage = () => {
     }
 
     return Promise.all([...idsToDelete]).then(refetch, showError);
+  };
+
+  const handleTagTaskBulk = () => {
+    console.log('tried to bulk tag!');
   };
 
   useEffect(() => {
@@ -347,6 +355,7 @@ const TasksListPage = () => {
             onReportImportClick={reportimport}
             onSelectionTypeChange={changeSelectionType}
             onSortChange={handleSortChange}
+            onTagsBulk={handleTagTaskBulk}
             onTaskCloneClick={handleCloneTask}
             onTaskCreateClick={create}
             onTaskDeleteClick={handleDeleteTask}
