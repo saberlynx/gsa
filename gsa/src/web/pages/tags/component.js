@@ -41,36 +41,6 @@ import TagDialog from 'web/pages/tags/dialog';
 export const SELECT_MAX_RESOURCES = 200; // concerns items in TagDialog's Select
 export const MAX_RESOURCES = 40; // concerns listing in "Assigned Resources" tab
 
-const ENUM_TYPES = {
-  alert: 'ALERT',
-  host: 'HOST',
-  operatingsystem: 'OPERATING_SYSTEM',
-  cpe: 'CPE',
-  credential: 'CREDENTIAL',
-  cve: 'CVE',
-  certbund: 'CERT_BUND_ADV',
-  dfncert: 'DFN_CERT_ADV',
-  filter: 'FILTER',
-  group: 'GROUP',
-  note: 'NOTE',
-  nvt: 'NVT',
-  ovaldef: 'OVALDEF',
-  override: 'OVERRIDE',
-  permission: 'PERMISSION',
-  portlist: 'PORT_LIST',
-  report: 'REPORT',
-  reportformat: 'REPORT_FORMAT',
-  result: 'RESULT',
-  role: 'ROLE',
-  scanconfig: 'SCAN_CONFIG',
-  scanner: 'SCANNER',
-  schedule: 'SCHEDULE',
-  target: 'TARGET',
-  task: 'TASK',
-  tlscertificate: 'TLS_CERTIFICATE',
-  user: 'USER',
-};
-
 const TYPES = [
   'alert',
   'host',
@@ -100,6 +70,36 @@ const TYPES = [
   'tlscertificate',
   'user',
 ];
+
+const ENUM_TYPES = {
+  alert: 'ALERT',
+  host: 'HOST',
+  operatingsystem: 'OPERATING_SYSTEM',
+  cpe: 'CPE',
+  credential: 'CREDENTIAL',
+  cve: 'CVE',
+  certbund: 'CERT_BUND_ADV',
+  dfncert: 'DFN_CERT_ADV',
+  filter: 'FILTER',
+  group: 'GROUP',
+  note: 'NOTE',
+  nvt: 'NVT',
+  ovaldef: 'OVALDEF',
+  override: 'OVERRIDE',
+  permission: 'PERMISSION',
+  portlist: 'PORT_LIST',
+  report: 'REPORT',
+  reportformat: 'REPORT_FORMAT',
+  result: 'RESULT',
+  role: 'ROLE',
+  scanconfig: 'SCAN_CONFIG',
+  scanner: 'SCANNER',
+  schedule: 'SCHEDULE',
+  target: 'TARGET',
+  task: 'TASK',
+  tlscertificate: 'TLS_CERTIFICATE',
+  user: 'USER',
+};
 
 const TagComponent = ({
   children,
