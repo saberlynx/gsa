@@ -264,6 +264,7 @@ const TagComponent = ({
     resource_id = '',
     resource_ids = [resource_id],
     resource_type,
+    resource_action = 'NULL',
     value = '',
   }) => {
     handleInteraction();

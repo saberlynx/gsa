@@ -41,3 +41,22 @@ export const useCreateTag = options => {
   const tagId = data?.createTag?.id;
   return [createTag, {...other, id: tagId}];
 };
+
+export const MODIFY_TAG = gql`
+  mutation modifyTag($input: ModifyTagInput!) {
+    modifyTag(input: $input) {
+      ok
+    }
+  }
+`;
+
+export const useModifyTag = options => {
+  const [queryModifyTag, {data}] = useMutation(MODIFY_TAG, options);
+  const modifyTag = useCallback(
+    // eslint-disable-next-line no-shadow
+    (inputObject, options) =>
+      queryModifyTag({...options, variables: {input: inputObject}}),
+    [queryModifyTag],
+  );
+  return [modifyTag, data];
+};
