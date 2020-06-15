@@ -101,7 +101,7 @@ const ENUM_TYPES = {
   user: 'USER',
 };
 
-const RESOURCE_ACTIONS = {
+const RESOURCE_ACTION = {
   add: 'ADD',
   set: 'SET',
   remove: 'REMOVE',
@@ -149,6 +149,7 @@ const TagComponent = ({
   };
 
   const handleAddTag = ({name, value, entity}) => {
+    console.log('handleAddTag called');
     handleInteraction();
 
     return gmp.tag
@@ -278,7 +279,9 @@ const TagComponent = ({
         resourceIds: resource_ids,
         value,
         active,
-      }).then(closeTagDialog);
+      })
+        .then(onCreated, onCreateError)
+        .then(closeTagDialog);
     }
     return modifyTag({
       id,
@@ -286,7 +289,7 @@ const TagComponent = ({
       comment,
       active,
       resourceAction: hasValue(resources_action)
-        ? RESOURCE_ACTIONS[resources_action]
+        ? RESOURCE_ACTION[resources_action]
         : null,
       resourceType: hasValue(resource_type) ? ENUM_TYPES[resource_type] : null,
       resourceIds: resource_ids,

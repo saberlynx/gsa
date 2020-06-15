@@ -462,7 +462,7 @@ const Page = props => {
                         <TabPanel>
                           <EntityTags
                             entity={entity}
-                            onChanged={onChanged}
+                            onChanged={refetch}
                             onError={onError}
                             onInteraction={onInteraction}
                           />
