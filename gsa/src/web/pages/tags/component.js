@@ -27,7 +27,7 @@ import {getEntityType, pluralizeType, typeName} from 'gmp/utils/entitytype';
 
 import {YES_VALUE} from 'gmp/parser';
 
-import {useCreateTag} from 'web/graphql/tags';
+import {useCreateTag, useModifyTag} from 'web/graphql/tags';
 
 import PropTypes from 'web/utils/proptypes';
 
@@ -101,6 +101,12 @@ const ENUM_TYPES = {
   user: 'USER',
 };
 
+const RESOURCE_ACTIONS = {
+  add: 'ADD',
+  set: 'SET',
+  remove: 'REMOVE',
+};
+
 const TagComponent = ({
   children,
   onAdded,
@@ -126,6 +132,7 @@ const TagComponent = ({
   const gmp = useGmp();
   const capabilities = useCapabilities();
   const [createTag] = useCreateTag();
+  const [modifyTag] = useModifyTag();
 
   const [state, setState] = useState({dialogVisible: false});
 
@@ -278,10 +285,18 @@ const TagComponent = ({
         value,
         active,
       }).then(closeTagDialog);
-    } else {
-      console.log('graphql modify tag');
     }
-    closeTagDialog();
+    return modifyTag({
+      id,
+      name,
+      comment,
+      active,
+      resourceAction: isDefined(resource_action)
+        ? RESOURCE_ACTIONS[resource_action]
+        : 'NULL',
+      resourceType: isDefined(resource_type) ? ENUM_TYPES[resource_type] : null,
+      resourceIds: resource_ids,
+    }).then(closeTagDialog);
   };
 
   const {

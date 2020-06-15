@@ -51,7 +51,7 @@ export const MODIFY_TAG = gql`
 `;
 
 export const useModifyTag = options => {
-  const [queryModifyTag, {data}] = useMutation(MODIFY_TAG, options);
+  const [queryModifyTag, data] = useMutation(MODIFY_TAG, options);
   const modifyTag = useCallback(
     // eslint-disable-next-line no-shadow
     (inputObject, options) =>
