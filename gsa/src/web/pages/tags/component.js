@@ -20,7 +20,7 @@ import React, {useState} from 'react';
 
 import _ from 'gmp/locale';
 
-import {isDefined} from 'gmp/utils/identity';
+import {isDefined, hasValue} from 'gmp/utils/identity';
 import {shorten} from 'gmp/utils/string';
 import {first} from 'gmp/utils/array';
 import {getEntityType, pluralizeType, typeName} from 'gmp/utils/entitytype';
@@ -243,18 +243,12 @@ const TagComponent = ({
   const handleRemove = (tag_id, entity) => {
     handleInteraction();
 
-    return gmp.tag
-      .get({id: tag_id})
-      .then(response => response.data)
-      .then(tag =>
-        gmp.tag.save({
-          ...tag,
-          resource_id: entity.id,
-          resource_type: tag.resourceType,
-          resources_action: 'remove',
-        }),
-      )
-      .then(onRemoved, onRemoveError);
+    return modifyTag({
+      id: tag_id,
+      resourceIds: [entity.id],
+      resourceType: ENUM_TYPES[getEntityType(entity)],
+      resourceAction: 'REMOVE',
+    }).then(onRemoved, onRemoveError);
   };
 
   const handleInteraction = () => {
@@ -271,7 +265,7 @@ const TagComponent = ({
     resource_id = '',
     resource_ids = [resource_id],
     resource_type,
-    resource_action = 'NULL',
+    resources_action,
     value = '',
   }) => {
     handleInteraction();
@@ -291,10 +285,10 @@ const TagComponent = ({
       name,
       comment,
       active,
-      resourceAction: isDefined(resource_action)
-        ? RESOURCE_ACTIONS[resource_action]
-        : 'NULL',
-      resourceType: isDefined(resource_type) ? ENUM_TYPES[resource_type] : null,
+      resourceAction: hasValue(resources_action)
+        ? RESOURCE_ACTIONS[resources_action]
+        : null,
+      resourceType: hasValue(resource_type) ? ENUM_TYPES[resource_type] : null,
       resourceIds: resource_ids,
     }).then(closeTagDialog);
   };
