@@ -498,6 +498,7 @@ export const useExportTasksByFilter = options => {
     options,
   );
   const exportTasksByFilter = useCallback(
+    // eslint-disable-next-line no-shadow
     filterString =>
       queryExportTasksByFilter({
         ...options,
@@ -505,7 +506,7 @@ export const useExportTasksByFilter = options => {
           filterString,
         },
       }),
-    [queryExportTasksByFilter],
+    [queryExportTasksByFilter, options],
   );
 
   const exportedTasks = data?.exportFilteredTasks?.exportedEntities.substring(
