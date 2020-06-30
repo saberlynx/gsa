@@ -493,7 +493,7 @@ export const EXPORT_FILTERED_TASKS = gql`
 `;
 
 export const useExportFilteredTasks = options => {
-  const [queryExportFilteredTasks, {data}] = useMutation(
+  const [queryExportFilteredTasks] = useMutation(
     EXPORT_FILTERED_TASKS,
     options,
   );
@@ -509,9 +509,5 @@ export const useExportFilteredTasks = options => {
     [queryExportFilteredTasks, options],
   );
 
-  const exportedTasks = data?.exportFilteredTasks?.exportedEntities.substring(
-    2,
-  );
-
-  return [exportFilteredTasks, exportedTasks];
+  return [exportFilteredTasks];
 };
