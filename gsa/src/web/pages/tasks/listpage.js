@@ -48,6 +48,7 @@ import EntitiesPage from 'web/entities/page';
 import {
   BulkTagComponent,
   useExportFilteredEntities,
+  useBulkDeleteEntities,
 } from 'web/entities/bulkactions';
 
 import {
@@ -146,6 +147,7 @@ const TasksListPage = () => {
   const [deleteTask] = useDeleteTask();
   const [deleteTasks] = useDeleteTasks();
   const [deleteFilteredTasks] = useDeleteFilteredTasks();
+  const bulkDeleteTasks = useBulkDeleteEntities();
   const [cloneTask] = useCloneTask();
   const {
     change: changeFilter,
@@ -197,15 +199,16 @@ const TasksListPage = () => {
   );
 
   const handleBulkDeleteTasks = () => {
-    if (selectionType === SelectionType.SELECTION_FILTER) {
-      const filterAll = filter.all().toFilterString();
-      return deleteFilteredTasks(filterAll).then(refetch, showError);
-    }
-    const tasksToDelete =
-      selectionType === SelectionType.SELECTION_USER
-        ? getEntityIds(selected)
-        : getEntityIds(tasks);
-    return deleteTasks(tasksToDelete).then(refetch, showError);
+    return bulkDeleteTasks({
+      selectionType,
+      filter,
+      selected,
+      entities: tasks,
+      deleteByIdsFunc: deleteTasks,
+      deleteByFilterFunc: deleteFilteredTasks,
+      onDeleted: refetch,
+      onError: showError,
+    });
   };
 
   const openTagsDialog = () => {
