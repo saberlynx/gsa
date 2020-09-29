@@ -18,9 +18,14 @@
 
 import {useCallback} from 'react';
 
-import {gql, useMutation} from '@apollo/client';
+import {gql, useMutation, useLazyQuery} from '@apollo/client';
 
 import {getEntityType} from 'gmp/utils/entitytype';
+import Tag from 'gmp/models/tag';
+
+import CollectionCounts from 'gmp/collection/collectioncounts';
+
+import {isDefined} from 'gmp/utils/identity';
 
 export const ENTITY_TYPES = {
   alert: 'ALERT',
@@ -171,3 +176,73 @@ export const useBulkTag = () => {
   );
   return [bulkTag, data];
 };
+
+export const GET_TAGS = gql`
+  query Tags(
+    $filterString: FilterString
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    tags(
+      filterString: $filterString
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      edges {
+        node {
+          id
+          name
+        }
+      }
+      counts {
+        total
+        filtered
+        offset
+        limit
+        length
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+        lastPageCursor
+      }
+    }
+  }
+`;
+
+export const useLazyGetTags = (variables, options) => {
+  const [queryTags, {data, ...other}] = useLazyQuery(GET_TAGS, {
+    ...options,
+    variables,
+  });
+  const tags = isDefined(data?.tags)
+    ? data.tags.edges.map(entity => Tag.fromObject(entity.node))
+    : undefined;
+
+  const {total, filtered, offset = -1, limit, length} =
+    data?.tags?.counts || {};
+  const counts = isDefined(data?.tags?.counts)
+    ? new CollectionCounts({
+        all: total,
+        filtered: filtered,
+        first: offset + 1,
+        length: length,
+        rows: limit,
+      })
+    : undefined;
+  const getTags = useCallback(
+    // eslint-disable-next-line no-shadow
+    (variables, options) => queryTags({...options, variables}),
+    [queryTags],
+  );
+  const pageInfo = data?.tags?.pageInfo;
+  return [getTags, {...other, counts, tags, pageInfo}];
+};
+
+// vim: set ts=2 sw=2 tw=80:
