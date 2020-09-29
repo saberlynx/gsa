@@ -37,11 +37,6 @@ import date from 'gmp/models/date';
 import ScanConfig, {FULL_AND_FAST_SCAN_CONFIG_ID} from 'gmp/models/scanconfig';
 import {OPENVAS_DEFAULT_SCANNER_ID} from 'gmp/models/scanner';
 
-import {
-  loadEntities as loadTags,
-  selector as tagsSelector,
-} from 'web/store/entities/tags';
-
 import {getTimezone} from 'web/store/usersettings/selectors';
 
 import {loadUserSettingDefaults} from 'web/store/usersettings/defaults/actions';
@@ -67,6 +62,8 @@ import {useLazyGetSchedules} from 'web/graphql/schedules';
 
 import {useLazyGetTargets} from 'web/graphql/targets';
 
+import {useLazyGetTags} from 'web/graphql/tags';
+
 import {
   useModifyTask,
   useCreateContainerTask,
@@ -90,6 +87,8 @@ import TaskDialog from './dialog';
 import ContainerTaskDialog from './containerdialog';
 
 const log = logger.getLogger('web.pages.tasks.component');
+
+const TAGS_FILTER = ALL_FILTER.copy().set('resource_type', 'task');
 
 const TaskComponent = props => {
   // GraphQL Queries and Mutations
@@ -151,6 +150,13 @@ const TaskComponent = props => {
     },
   ] = useLazyGetTargets({
     filterString: ALL_FILTER.toFilterString(),
+  });
+
+  const [
+    loadTags,
+    {tags, loading: isLoadingTags, refetch: refetchTags, error: tagError},
+  ] = useLazyGetTags({
+    filterString: TAGS_FILTER,
   });
 
   const capabilities = useCapabilities();
@@ -460,7 +466,7 @@ const TaskComponent = props => {
     loadScanners();
     loadSchedules();
     loadTargets();
-    props.loadTags();
+    loadTags();
 
     if (isDefined(task)) {
       const canAccessSchedules =
@@ -787,8 +793,6 @@ const TaskComponent = props => {
   ]);
 
   const {
-    isLoadingTags,
-    tags,
     children,
     onCloned,
     onCloneError,
@@ -1040,15 +1044,6 @@ TaskComponent.propTypes = {
   defaultSshCredential: PropTypes.id,
   defaultTargetId: PropTypes.id,
   gmp: PropTypes.gmp.isRequired,
-  isLoadingAlerts: PropTypes.bool,
-  isLoadingConfigs: PropTypes.bool,
-  isLoadingScanners: PropTypes.bool,
-  isLoadingSchedules: PropTypes.bool,
-  isLoadingTags: PropTypes.bool,
-  isLoadingTargets: PropTypes.bool,
-  loadAlerts: PropTypes.func,
-  loadCredentials: PropTypes.func.isRequired,
-  loadTags: PropTypes.func.isRequired,
   loadUserSettingsDefaults: PropTypes.func.isRequired,
   scanConfigs: PropTypes.arrayOf(PropTypes.model),
   scanners: PropTypes.arrayOf(PropTypes.model),
@@ -1086,11 +1081,8 @@ TaskComponent.propTypes = {
   onTaskWizardSaved: PropTypes.func,
 };
 
-const TAGS_FILTER = ALL_FILTER.copy().set('resource_type', 'task');
-
 const mapStateToProps = rootState => {
   const userDefaults = getUserSettingsDefaults(rootState);
-  const tagsSel = tagsSelector(rootState);
   return {
     timezone: getTimezone(rootState),
     defaultAlertId: userDefaults.getValueByName('defaultalert'),
@@ -1104,13 +1096,10 @@ const mapStateToProps = rootState => {
     defaultSshCredential: userDefaults.getValueByName('defaultsshcredential'),
     defaultSmbCredential: userDefaults.getValueByName('defaultsmbcredential'),
     defaultTargetId: userDefaults.getValueByName('defaulttarget'),
-    isLoadingTags: tagsSel.isLoadingAllEntities(ALL_FILTER),
-    tags: tagsSel.getEntities(TAGS_FILTER),
   };
 };
 
 const mapDispatchToProp = (dispatch, {gmp}) => ({
-  loadTags: () => dispatch(loadTags(gmp)(TAGS_FILTER)),
   loadUserSettingsDefaults: () => dispatch(loadUserSettingDefaults(gmp)()),
 });
 
