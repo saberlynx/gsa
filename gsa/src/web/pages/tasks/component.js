@@ -156,7 +156,7 @@ const TaskComponent = props => {
     loadTags,
     {tags, loading: isLoadingTags, refetch: refetchTags, error: tagError},
   ] = useLazyGetTags({
-    filterString: TAGS_FILTER,
+    filterString: TAGS_FILTER.toFilterString(),
   });
 
   const capabilities = useCapabilities();
