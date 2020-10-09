@@ -22,7 +22,6 @@ import Capabilities from 'gmp/capabilities/capabilities';
 import {setLocale} from 'gmp/locale/lang';
 
 import Audit, {AUDIT_STATUS} from 'gmp/models/audit';
-import {GMP_SCANNER_TYPE} from 'gmp/models/scanner';
 
 import {setTimezone, setUsername} from 'web/store/usersettings/actions';
 
@@ -158,7 +157,6 @@ describe('Audit Row tests', () => {
       last_report: lastReport,
       permissions: {permission: [{name: 'everything'}]},
       target: {_id: 'id', name: 'target'},
-      scanner: {_id: 'id', name: 'scanner', type: GMP_SCANNER_TYPE},
       observers: {
         __text: 'anon nymous',
         role: [{name: 'lorem'}],
@@ -207,10 +205,6 @@ describe('Audit Row tests', () => {
 
     expect(icons[0]).toHaveAttribute('title', 'Audit is alterable');
     expect(icons[1]).toHaveAttribute(
-      'title',
-      'Audit is configured to run on sensor scanner',
-    );
-    expect(icons[2]).toHaveAttribute(
       'title',
       'Audit made visible for:\nUsers anon, nymous\nRoles lorem\nGroups ipsum, dolor',
     );
