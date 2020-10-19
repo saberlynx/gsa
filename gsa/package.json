@@ -42,7 +42,7 @@
     "fast-xml-parser": "^3.17.4",
     "glamor": "^2.20.40",
     "graphql": "^14.7.0",
-    "history": "^4.10.1",
+    "history": "^5.0.0",
     "hoist-non-react-statics": "^3.3.2",
     "i18next": "^19.8.2",
     "i18next-xhr-backend": "3.2.2",
