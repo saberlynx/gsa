@@ -846,8 +846,6 @@ const TaskComponent = ({
     targetHosts,
     scanConfigs,
     startDate,
-    startMinute,
-    startHour,
     reschedule,
     alertIds,
     configId,

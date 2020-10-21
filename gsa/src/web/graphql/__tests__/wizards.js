@@ -321,7 +321,7 @@ describe('useRunModifyTask tests', () => {
     expect(screen.queryByTestId('error')).not.toBeInTheDocument();
   });
 
-  test('Should not create an alert if alert_email is empty string', async () => {
+  test('Should not create an alert if alertEmail is empty string', async () => {
     const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock(
       startDate,
       startTimezone,
@@ -367,19 +367,17 @@ const RunQuickTaskComponent = ({alertEmail, autoStart}) => {
   const handleRunQuickTask = async () => {
     try {
       await runQuickTask({
-        task_name: 'myFirstTask',
-        alert_email: alertEmail,
-        auto_start: autoStart,
-        config_id: '08642',
-        esxi_credential: '11111',
-        smb_credential: '',
-        ssh_credential: '',
-        target_hosts: '127.0.0.1, 192.168.0.1',
-        ssh_port: 22,
-        start_date: date(),
-        start_timezone: 'Europe/Berlin',
-        start_hour: 13,
-        start_minute: 13,
+        taskName: 'myFirstTask',
+        alertEmail,
+        autoStart,
+        configId: '08642',
+        esxiCredential: '11111',
+        smbCredential: '',
+        sshCredential: '',
+        targetHosts: '127.0.0.1, 192.168.0.1',
+        sshPort: 22,
+        startDate,
+        startTimezone,
       }).then(id => {
         if (hasValue(id)) {
           setReportId(id);

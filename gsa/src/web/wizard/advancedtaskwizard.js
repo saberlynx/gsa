@@ -53,27 +53,27 @@ const SCHEDULE_START_VALUE = '1';
 const DONT_START_VALUE = '0';
 
 const DEFAULTS = {
-  scan_configs: [],
+  scanConfigs: [],
   credentials: [],
-  auto_start: '2',
-  ssh_port: 22,
+  autoStart: '2',
+  sshPort: 22,
 };
 
 const AdvancedTaskWizard = ({
-  alert_email,
-  auto_start,
+  alertEmail,
+  autoStart,
   capabilities,
-  config_id,
+  configId,
   credentials = [],
   startDate,
-  esxi_credential = '',
-  scan_configs,
-  smb_credential = '',
-  ssh_credential = '',
-  ssh_port,
+  esxiCredential = '',
+  scanConfigs,
+  smbCredential = '',
+  sshCredential = '',
+  sshPort,
   startTimezone,
-  target_hosts,
-  task_name,
+  targetHosts,
+  taskName,
   onClose,
   onSave,
 }) => {
@@ -82,7 +82,7 @@ const AdvancedTaskWizard = ({
     startTimezone,
   });
 
-  const configItems = renderSelectItems(scan_configs);
+  const configItems = renderSelectItems(scanConfigs);
   const sshCredentialItems = renderSelectItems(
     credentials.filter(ssh_credential_filter),
     '',
@@ -126,17 +126,17 @@ const AdvancedTaskWizard = ({
   };
 
   const data = {
-    alert_email,
-    auto_start,
-    config_id,
+    alertEmail,
+    autoStart,
+    configId,
     credentials,
-    esxi_credential,
-    scan_configs,
-    smb_credential,
-    ssh_credential,
-    ssh_port,
-    target_hosts,
-    task_name,
+    esxiCredential,
+    scanConfigs,
+    smbCredential,
+    sshCredential,
+    sshPort,
+    targetHosts,
+    taskName,
     ...timeState,
     ...DEFAULTS,
   };
@@ -215,10 +215,10 @@ const AdvancedTaskWizard = ({
           <Layout grow="1" basis="0" flex="column">
             <FormGroup title={_('Task Name')} titleSize="3">
               <TextField
-                name="task_name"
+                name="taskName"
                 grow="1"
                 onChange={onValueChange}
-                value={state.task_name}
+                value={state.taskName}
                 size="30"
                 maxLength="80"
               />
@@ -226,8 +226,8 @@ const AdvancedTaskWizard = ({
 
             <FormGroup title={_('Scan Config')} titleSize="3">
               <Select
-                name="config_id"
-                value={state.config_id}
+                name="configId"
+                value={state.configId}
                 items={configItems}
                 onChange={onValueChange}
               />
@@ -235,10 +235,10 @@ const AdvancedTaskWizard = ({
 
             <FormGroup title={_('Target Host(s)')} titleSize="3">
               <TextField
-                name="target_hosts"
+                name="targetHosts"
                 grow="1"
                 onChange={onValueChange}
-                value={state.target_hosts}
+                value={state.targetHosts}
                 maxLength="2000"
               />
             </FormGroup>
@@ -248,8 +248,8 @@ const AdvancedTaskWizard = ({
                 <Radio
                   title={_('Start immediately')}
                   value={IMMEDIATELY_START_VALUE}
-                  checked={state.auto_start === IMMEDIATELY_START_VALUE}
-                  name="auto_start"
+                  checked={state.autoStart === IMMEDIATELY_START_VALUE}
+                  name="autoStart"
                   onChange={onValueChange}
                 />
               </FormGroup>
@@ -261,8 +261,8 @@ const AdvancedTaskWizard = ({
                       <Radio
                         title={_('Create Schedule:')}
                         value={SCHEDULE_START_VALUE}
-                        checked={state.auto_start === SCHEDULE_START_VALUE}
-                        name="auto_start"
+                        checked={state.autoStart === SCHEDULE_START_VALUE}
+                        name="autoStart"
                         onChange={onValueChange}
                       />
                     </FormGroup>
@@ -311,8 +311,8 @@ const AdvancedTaskWizard = ({
               <Radio
                 title={_('Do not start automatically')}
                 value={DONT_START_VALUE}
-                checked={state.auto_start === DONT_START_VALUE}
-                name="auto_start"
+                checked={state.autoStart === DONT_START_VALUE}
+                name="autoStart"
                 onChange={onValueChange}
               />
             </FormGroup>
@@ -320,8 +320,8 @@ const AdvancedTaskWizard = ({
             <FormGroup title={_('SSH Credential')} titleSize="3">
               <Divider>
                 <Select
-                  value={state.ssh_credential}
-                  name="ssh_credential"
+                  value={state.sshCredential}
+                  name="sshCredential"
                   items={sshCredentialItems}
                   onChange={onValueChange}
                 />
@@ -330,7 +330,7 @@ const AdvancedTaskWizard = ({
                   min="0"
                   max="65535"
                   size="5"
-                  value={state.ssh_port}
+                  value={state.sshPort}
                   onChange={onValueChange}
                 />
               </Divider>
@@ -338,8 +338,8 @@ const AdvancedTaskWizard = ({
 
             <FormGroup title={_('SMB Credential')} titleSize="3">
               <Select
-                value={state.smb_credential}
-                name="smb_credential"
+                value={state.smbCredential}
+                name="smbCredential"
                 items={smbCredentialItems}
                 onChange={onValueChange}
               />
@@ -347,8 +347,8 @@ const AdvancedTaskWizard = ({
 
             <FormGroup title={_('ESXi Credential')} titleSize="3">
               <Select
-                value={state.esxi_credential}
-                name="esxi_credential"
+                value={state.esxiCredential}
+                name="esxiCredential"
                 items={esxiCredentialItems}
                 onChange={onValueChange}
               />
@@ -358,9 +358,9 @@ const AdvancedTaskWizard = ({
               capabilities.mayAccess('alerts') && (
                 <FormGroup title={_('Email report to')} titleSize="3">
                   <TextField
-                    name="alert_email"
+                    name="alertEmail"
                     grow="1"
-                    value={state.alert_email}
+                    value={state.alertEmail}
                     size="30"
                     maxLength="80"
                     onChange={onValueChange}
@@ -375,24 +375,24 @@ const AdvancedTaskWizard = ({
 };
 
 AdvancedTaskWizard.propTypes = {
-  alert_email: PropTypes.string,
-  auto_start: PropTypes.oneOf([
+  alertEmail: PropTypes.string,
+  autoStart: PropTypes.oneOf([
     IMMEDIATELY_START_VALUE,
     SCHEDULE_START_VALUE,
     DONT_START_VALUE,
   ]),
   capabilities: PropTypes.capabilities.isRequired,
-  config_id: PropTypes.idOrZero,
+  configId: PropTypes.idOrZero,
   credentials: PropTypes.arrayOf(PropTypes.model),
-  esxi_credential: PropTypes.idOrZero,
-  scan_configs: PropTypes.arrayOf(PropTypes.model),
-  smb_credential: PropTypes.idOrZero,
-  ssh_credential: PropTypes.idOrZero,
-  ssh_port: PropTypes.number,
+  esxiCredential: PropTypes.idOrZero,
+  scanConfigs: PropTypes.arrayOf(PropTypes.model),
+  smbCredential: PropTypes.idOrZero,
+  sshCredential: PropTypes.idOrZero,
+  sshPort: PropTypes.number,
   startDate: PropTypes.date,
   startTimezone: PropTypes.string,
-  target_hosts: PropTypes.string,
-  task_name: PropTypes.string,
+  targetHosts: PropTypes.string,
+  taskName: PropTypes.string,
   title: PropTypes.string,
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
