@@ -1001,7 +1001,7 @@ const TaskComponent = ({
         <AdvancedTaskWizard
           credentials={credentials}
           scan_configs={scanConfigs}
-          start_date={startDate}
+          startDate={startDate}
           task_name={taskName}
           target_hosts={targetHosts}
           port_list_id={portListId}
@@ -1011,9 +1011,7 @@ const TaskComponent = ({
           smb_credential={smbCredential}
           esxi_credential={esxiCredential}
           scanner_id={scannerId}
-          start_minute={startMinute}
-          start_hour={startHour}
-          start_timezone={startTimezone}
+          startTimezone={startTimezone}
           onClose={handleCloseAdvancedTaskWizard}
           onSave={handleSaveAdvancedTaskWizard}
         />

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React, {useReducer} from 'react';
 
 import _ from 'gmp/locale';
 
@@ -44,6 +44,8 @@ import TimeZoneSelect from 'web/components/form/timezoneselect';
 
 import Layout from 'web/components/layout/layout';
 
+import reducer, {updateState} from 'web/utils/stateReducer';
+
 import {WizardContent, WizardIcon} from './taskwizard';
 
 const IMMEDIATELY_START_VALUE = '2';
@@ -63,20 +65,23 @@ const AdvancedTaskWizard = ({
   capabilities,
   config_id,
   credentials = [],
-  start_date,
+  startDate,
   esxi_credential = '',
   scan_configs,
   smb_credential = '',
   ssh_credential = '',
   ssh_port,
-  start_hour,
-  start_minute,
-  start_timezone,
+  startTimezone,
   target_hosts,
   task_name,
   onClose,
   onSave,
 }) => {
+  const [timeState, dispatch] = useReducer(reducer, {
+    startDate,
+    startTimezone,
+  });
+
   const configItems = renderSelectItems(scan_configs);
   const sshCredentialItems = renderSelectItems(
     credentials.filter(ssh_credential_filter),
@@ -91,22 +96,48 @@ const AdvancedTaskWizard = ({
     '',
   );
 
+  const handleTimeChange = (value, name) => {
+    if (name === 'startDate') {
+      dispatch(
+        updateState({
+          startDate: value,
+        }),
+      );
+    } else if (name === 'startHour') {
+      dispatch(
+        updateState({
+          startDate: timeState.startDate.hours(value),
+        }),
+      );
+    } else if (name === 'startMinute') {
+      dispatch(
+        updateState({
+          startDate: timeState.startDate.minutes(value),
+        }),
+      );
+    } else if (name === 'startTimezone') {
+      dispatch(
+        updateState({
+          startDate: timeState.startDate.tz(value),
+          startTimezone: value,
+        }),
+      );
+    }
+  };
+
   const data = {
     alert_email,
     auto_start,
     config_id,
     credentials,
-    start_date,
     esxi_credential,
     scan_configs,
     smb_credential,
     ssh_credential,
     ssh_port,
-    start_hour,
-    start_minute,
-    start_timezone,
     target_hosts,
     task_name,
+    ...timeState,
     ...DEFAULTS,
   };
 
@@ -237,9 +268,9 @@ const AdvancedTaskWizard = ({
                     </FormGroup>
                     <FormGroup offset="1">
                       <Datepicker
-                        name="start_date"
-                        value={state.start_date}
-                        onChange={onValueChange}
+                        name="startDate"
+                        value={timeState.startDate}
+                        onChange={handleTimeChange}
                       />
                     </FormGroup>
                     <FormGroup offset="1">
@@ -250,9 +281,9 @@ const AdvancedTaskWizard = ({
                           min="0"
                           max="23"
                           size="2"
-                          name="start_hour"
-                          value={state.start_hour}
-                          onChange={onValueChange}
+                          name="startHour"
+                          value={timeState.startDate.hours()}
+                          onChange={handleTimeChange}
                         />
                         <span>{_('h')}</span>
                         <Spinner
@@ -260,18 +291,18 @@ const AdvancedTaskWizard = ({
                           min="0"
                           max="59"
                           size="2"
-                          name="start_minute"
-                          value={state.start_minute}
-                          onChange={onValueChange}
+                          name="startMinute"
+                          value={timeState.startDate.minutes()}
+                          onChange={handleTimeChange}
                         />
                         <span>{_('m')}</span>
                       </Divider>
                     </FormGroup>
                     <FormGroup offset="1">
                       <TimeZoneSelect
-                        name="start_timezone"
-                        value={state.start_timezone}
-                        onChange={onValueChange}
+                        name="startTimezone"
+                        value={timeState.startTimezone}
+                        onChange={handleTimeChange}
                       />
                     </FormGroup>
                   </span>
@@ -358,10 +389,8 @@ AdvancedTaskWizard.propTypes = {
   smb_credential: PropTypes.idOrZero,
   ssh_credential: PropTypes.idOrZero,
   ssh_port: PropTypes.number,
-  start_date: PropTypes.date,
-  start_hour: PropTypes.number,
-  start_minute: PropTypes.number,
-  start_timezone: PropTypes.string,
+  startDate: PropTypes.date,
+  startTimezone: PropTypes.string,
   target_hosts: PropTypes.string,
   task_name: PropTypes.string,
   title: PropTypes.string,
