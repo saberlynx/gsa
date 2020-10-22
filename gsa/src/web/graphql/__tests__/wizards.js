@@ -625,6 +625,74 @@ describe('useRunQuickTask tests', () => {
     expect(screen.queryByTestId('error')).not.toBeInTheDocument();
   });
 
+  test('Should create a schedule or but not start task if autoStart is 1', async () => {
+    const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock(
+      'New Quick Task',
+      startDate,
+      startTimezone,
+    );
+    const [alertMock, alertResult] = createWizardAlertQueryMock(
+      'New Quick Task',
+      startDate,
+    );
+    const [targetMock, targetResult] = createAdvancedWizardTargetQueryMock(
+      'New Quick Task',
+      startDate,
+    );
+    const [
+      createTaskMock,
+      createTaskResult,
+    ] = createAdvancedWizardCreateTaskQueryMock(
+      'New Quick Task',
+      '12345',
+      '23456',
+    );
+    const [startTaskMock, startTaskResult] = createWizardStartTaskQueryMock();
+
+    const {render} = rendererWith({
+      queryMocks: [
+        startTaskMock,
+        targetMock,
+        scheduleMock,
+        alertMock,
+        createTaskMock,
+      ],
+    });
+
+    render(
+      <RunQuickTaskComponent alertEmail={'foo@bar.com'} autoStart={'1'} />,
+    );
+
+    const button = screen.getByTestId('wizard');
+    fireEvent.click(button);
+
+    await wait();
+
+    expect(alertResult).toHaveBeenCalled();
+
+    await wait();
+
+    expect(scheduleResult).toHaveBeenCalled();
+
+    await wait();
+
+    expect(targetResult).toHaveBeenCalled();
+
+    await wait();
+
+    expect(createTaskResult).toHaveBeenCalled();
+
+    await wait();
+
+    expect(startTaskResult).not.toHaveBeenCalled();
+
+    const startTaskReportId = await screen.getByTestId('started-task');
+    expect(startTaskReportId).toHaveTextContent(
+      'Task started with report id null',
+    ); // task is not started
+    expect(screen.queryByTestId('error')).not.toBeInTheDocument();
+  });
+
   test('Should not create an alert if alertEmail is empty string', async () => {
     const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock(
       'New Quick Task',
