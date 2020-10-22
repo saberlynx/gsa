@@ -205,7 +205,10 @@ describe('useRunModifyTask tests', () => {
       startDate,
       startTimezone,
     );
-    const [alertMock, alertResult] = createWizardAlertQueryMock(startDate);
+    const [alertMock, alertResult] = createWizardAlertQueryMock(
+      'myFirstTask',
+      startDate,
+    );
     const [modifyTaskMock, modifyTaskResult] = createWizardModifyTaskQueryMock(
       '12345',
       '23456',
@@ -245,7 +248,10 @@ describe('useRunModifyTask tests', () => {
       scheduleMock,
       scheduleResult,
     ] = createWizardScheduleQueryMock(startDate, startTimezone, [error]);
-    const [alertMock, alertResult] = createWizardAlertQueryMock(startDate);
+    const [alertMock, alertResult] = createWizardAlertQueryMock(
+      'myFirstTask',
+      startDate,
+    );
     const [modifyTaskMock, modifyTaskResult] = createWizardModifyTaskQueryMock(
       '12345',
       '23456',
@@ -289,7 +295,10 @@ describe('useRunModifyTask tests', () => {
       startTimezone,
       'Europe/Berlin',
     );
-    const [alertMock, alertResult] = createWizardAlertQueryMock(startDate);
+    const [alertMock, alertResult] = createWizardAlertQueryMock(
+      'myFirstTask',
+      startDate,
+    );
     const [modifyTaskMock, modifyTaskResult] = createWizardModifyTaskQueryMock(
       undefined,
       '23456',
@@ -328,7 +337,10 @@ describe('useRunModifyTask tests', () => {
       startDate,
       startTimezone,
     );
-    const [alertMock, alertResult] = createWizardAlertQueryMock(startDate);
+    const [alertMock, alertResult] = createWizardAlertQueryMock(
+      'myFirstTask',
+      startDate,
+    );
     const [modifyTaskMock, modifyTaskResult] = createWizardModifyTaskQueryMock(
       '12345',
       undefined,
