@@ -43,6 +43,7 @@ import {
   createAdvancedWizardCreateTaskQueryMock,
   createAdvancedWizardTargetQueryMock,
   createAdvancedWizardAlertQueryMock,
+  qgi,
 } from '../__mocks__/wizards';
 
 import {hasValue} from 'gmp/utils/identity';
@@ -405,12 +406,14 @@ const RunQuickTaskComponent = ({alertEmail, autoStart}) => {
 };
 
 describe('useRunQuickTask tests', () => {
-  test.only('Should create target, alert, task and start task after user interaction', async () => {
+  test('Should create target, alert, task and start task after user interaction', async () => {
     const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock();
     const [alertMock, alertResult] = createAdvancedWizardAlertQueryMock(
       startDate,
     );
-    const [targetMock, targetResult] = createAdvancedWizardTargetQueryMock();
+    const [targetMock, targetResult] = createAdvancedWizardTargetQueryMock(
+      startDate,
+    );
     const [
       createTaskMock,
       createTaskResult,
