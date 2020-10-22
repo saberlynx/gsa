@@ -466,9 +466,10 @@ describe('useRunQuickTask tests', () => {
     const error = new GraphQLError('Oops. Something went wrong :(');
 
     const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock();
-    const [alertMock, alertResult] = createAdvancedWizardAlertQueryMock([
-      error,
-    ]);
+    const [
+      alertMock,
+      alertResult,
+    ] = createAdvancedWizardAlertQueryMock(startDate, [error]);
     const [targetMock, targetResult] = createAdvancedWizardTargetQueryMock();
     const [
       createTaskMock,
