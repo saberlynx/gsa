@@ -42,8 +42,6 @@ import {
   createWizardModifyTaskQueryMock,
   createAdvancedWizardCreateTaskQueryMock,
   createAdvancedWizardTargetQueryMock,
-  createAdvancedWizardAlertQueryMock,
-  qgi,
 } from '../__mocks__/wizards';
 
 import {hasValue} from 'gmp/utils/identity';
@@ -202,6 +200,7 @@ const RunModifyTaskComponent = ({alertEmail, reschedule}) => {
 describe('useRunModifyTask tests', () => {
   test('Should create schedule, alert, and modify task after user interaction', async () => {
     const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock(
+      'myFirstTask',
       startDate,
       startTimezone,
     );
@@ -247,7 +246,9 @@ describe('useRunModifyTask tests', () => {
     const [
       scheduleMock,
       scheduleResult,
-    ] = createWizardScheduleQueryMock(startDate, startTimezone, [error]);
+    ] = createWizardScheduleQueryMock('myFirstTask', startDate, startTimezone, [
+      error,
+    ]);
     const [alertMock, alertResult] = createWizardAlertQueryMock(
       'myFirstTask',
       startDate,
@@ -291,9 +292,9 @@ describe('useRunModifyTask tests', () => {
 
   test('Should not create a schedule if reschedule is 0', async () => {
     const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock(
+      'myFirstTask',
       startDate,
       startTimezone,
-      'Europe/Berlin',
     );
     const [alertMock, alertResult] = createWizardAlertQueryMock(
       'myFirstTask',
@@ -334,6 +335,7 @@ describe('useRunModifyTask tests', () => {
 
   test('Should not create an alert if alertEmail is empty string', async () => {
     const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock(
+      'myFirstTask',
       startDate,
       startTimezone,
     );
@@ -381,7 +383,7 @@ const RunQuickTaskComponent = ({alertEmail, autoStart}) => {
   const handleRunQuickTask = async () => {
     try {
       await runQuickTask({
-        taskName: 'myFirstTask',
+        taskName: 'New Quick Task',
         alertEmail,
         autoStart,
         configId: '08642',
@@ -419,17 +421,27 @@ const RunQuickTaskComponent = ({alertEmail, autoStart}) => {
 
 describe('useRunQuickTask tests', () => {
   test('Should create target, alert, task and start task after user interaction', async () => {
-    const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock();
-    const [alertMock, alertResult] = createAdvancedWizardAlertQueryMock(
+    const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock(
+      'New Quick Task',
+      startDate,
+      startTimezone,
+    );
+    const [alertMock, alertResult] = createWizardAlertQueryMock(
+      'New Quick Task',
       startDate,
     );
     const [targetMock, targetResult] = createAdvancedWizardTargetQueryMock(
+      'New Quick Task',
       startDate,
     );
     const [
       createTaskMock,
       createTaskResult,
-    ] = createAdvancedWizardCreateTaskQueryMock(undefined, '23456');
+    ] = createAdvancedWizardCreateTaskQueryMock(
+      'New Quick Task',
+      undefined,
+      '23456',
+    );
     const [startTaskMock, startTaskResult] = createWizardStartTaskQueryMock();
 
     const {render} = rendererWith({
@@ -477,16 +489,27 @@ describe('useRunQuickTask tests', () => {
   test('Should gracefully catch error in promise chain', async () => {
     const error = new GraphQLError('Oops. Something went wrong :(');
 
-    const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock();
+    const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock(
+      'New Quick Task',
+      startDate,
+      startTimezone,
+    );
     const [
       alertMock,
       alertResult,
-    ] = createAdvancedWizardAlertQueryMock(startDate, [error]);
-    const [targetMock, targetResult] = createAdvancedWizardTargetQueryMock();
+    ] = createWizardAlertQueryMock('New Quick Task', startDate, [error]);
+    const [targetMock, targetResult] = createAdvancedWizardTargetQueryMock(
+      'New Quick Task',
+      startDate,
+    );
     const [
       createTaskMock,
       createTaskResult,
-    ] = createAdvancedWizardCreateTaskQueryMock(undefined, '23456');
+    ] = createAdvancedWizardCreateTaskQueryMock(
+      'New Quick Task',
+      undefined,
+      '23456',
+    );
     const [startTaskMock, startTaskResult] = createWizardStartTaskQueryMock();
 
     const {render} = rendererWith({
@@ -536,13 +559,27 @@ describe('useRunQuickTask tests', () => {
   });
 
   test('Should not create a schedule or start task if autoStart is 0', async () => {
-    const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock();
-    const [alertMock, alertResult] = createAdvancedWizardAlertQueryMock();
-    const [targetMock, targetResult] = createAdvancedWizardTargetQueryMock();
+    const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock(
+      'New Quick Task',
+      startDate,
+      startTimezone,
+    );
+    const [alertMock, alertResult] = createWizardAlertQueryMock(
+      'New Quick Task',
+      startDate,
+    );
+    const [targetMock, targetResult] = createAdvancedWizardTargetQueryMock(
+      'New Quick Task',
+      startDate,
+    );
     const [
       createTaskMock,
       createTaskResult,
-    ] = createAdvancedWizardCreateTaskQueryMock(undefined, '23456');
+    ] = createAdvancedWizardCreateTaskQueryMock(
+      'New Quick Task',
+      undefined,
+      '23456',
+    );
     const [startTaskMock, startTaskResult] = createWizardStartTaskQueryMock();
 
     const {render} = rendererWith({
