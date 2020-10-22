@@ -24,6 +24,7 @@ import {v4 as uuid} from 'uuid';
 import {GraphQLError} from 'graphql';
 
 import date, {setLocale} from 'gmp/models/date';
+import {hasValue} from 'gmp/utils/identity';
 
 import {rendererWith, screen, wait, fireEvent} from 'web/utils/testing';
 
@@ -43,8 +44,6 @@ import {
   createAdvancedWizardCreateTaskQueryMock,
   createAdvancedWizardTargetQueryMock,
 } from '../__mocks__/wizards';
-
-import {hasValue} from 'gmp/utils/identity';
 
 setLocale('en'); // Required for composing wizard entity name
 
