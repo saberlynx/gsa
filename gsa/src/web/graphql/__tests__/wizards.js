@@ -419,7 +419,7 @@ const RunQuickTaskComponent = ({alertEmail, autoStart}) => {
 };
 
 describe('useRunQuickTask tests', () => {
-  test('Should create target, alert, task and start task after user interaction', async () => {
+  test('Should create target, alert, task (but not schedule) and start task after user interaction', async () => {
     const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock(
       'New Quick Task',
       startDate,
@@ -601,6 +601,72 @@ describe('useRunQuickTask tests', () => {
     await wait();
 
     expect(alertResult).toHaveBeenCalled();
+
+    await wait();
+
+    expect(scheduleResult).not.toHaveBeenCalled();
+
+    await wait();
+
+    expect(targetResult).toHaveBeenCalled();
+
+    await wait();
+
+    expect(createTaskResult).toHaveBeenCalled();
+
+    await wait();
+
+    expect(startTaskResult).not.toHaveBeenCalled();
+
+    const startTaskReportId = await screen.getByTestId('started-task');
+    expect(startTaskReportId).toHaveTextContent(
+      'Task started with report id null',
+    ); // task is not started
+    expect(screen.queryByTestId('error')).not.toBeInTheDocument();
+  });
+
+  test('Should not create an alert if alertEmail is empty string', async () => {
+    const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock(
+      'New Quick Task',
+      startDate,
+      startTimezone,
+    );
+    const [alertMock, alertResult] = createWizardAlertQueryMock(
+      'New Quick Task',
+      startDate,
+    );
+    const [targetMock, targetResult] = createAdvancedWizardTargetQueryMock(
+      'New Quick Task',
+      startDate,
+    );
+    const [
+      createTaskMock,
+      createTaskResult,
+    ] = createAdvancedWizardCreateTaskQueryMock(
+      'New Quick Task',
+      undefined,
+      undefined,
+    );
+    const [startTaskMock, startTaskResult] = createWizardStartTaskQueryMock();
+
+    const {render} = rendererWith({
+      queryMocks: [
+        startTaskMock,
+        targetMock,
+        scheduleMock,
+        alertMock,
+        createTaskMock,
+      ],
+    });
+
+    render(<RunQuickTaskComponent alertEmail={''} autoStart={'0'} />);
+
+    const button = screen.getByTestId('wizard');
+    fireEvent.click(button);
+
+    await wait();
+
+    expect(alertResult).not.toHaveBeenCalled();
 
     await wait();
 
