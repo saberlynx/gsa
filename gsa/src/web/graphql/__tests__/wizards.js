@@ -42,6 +42,7 @@ import {
   createWizardModifyTaskQueryMock,
   createAdvancedWizardCreateTaskQueryMock,
   createAdvancedWizardTargetQueryMock,
+  createAdvancedWizardAlertQueryMock,
 } from '../__mocks__/wizards';
 
 import {hasValue} from 'gmp/utils/identity';
@@ -404,9 +405,11 @@ const RunQuickTaskComponent = ({alertEmail, autoStart}) => {
 };
 
 describe('useRunQuickTask tests', () => {
-  test('Should create target, alert, task and start task after user interaction', async () => {
+  test.only('Should create target, alert, task and start task after user interaction', async () => {
     const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock();
-    const [alertMock, alertResult] = createWizardAlertQueryMock();
+    const [alertMock, alertResult] = createAdvancedWizardAlertQueryMock(
+      startDate,
+    );
     const [targetMock, targetResult] = createAdvancedWizardTargetQueryMock();
     const [
       createTaskMock,
@@ -460,7 +463,9 @@ describe('useRunQuickTask tests', () => {
     const error = new GraphQLError('Oops. Something went wrong :(');
 
     const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock();
-    const [alertMock, alertResult] = createWizardAlertQueryMock([error]);
+    const [alertMock, alertResult] = createAdvancedWizardAlertQueryMock([
+      error,
+    ]);
     const [targetMock, targetResult] = createAdvancedWizardTargetQueryMock();
     const [
       createTaskMock,
@@ -516,7 +521,7 @@ describe('useRunQuickTask tests', () => {
 
   test('Should not create a schedule or start task if autoStart is 0', async () => {
     const [scheduleMock, scheduleResult] = createWizardScheduleQueryMock();
-    const [alertMock, alertResult] = createWizardAlertQueryMock();
+    const [alertMock, alertResult] = createAdvancedWizardAlertQueryMock();
     const [targetMock, targetResult] = createAdvancedWizardTargetQueryMock();
     const [
       createTaskMock,
