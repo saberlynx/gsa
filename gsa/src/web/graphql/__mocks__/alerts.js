@@ -28,6 +28,7 @@ const alert1 = deepFreeze({
   active: true,
   creationTime: '2020-08-06T11:34:15+00:00',
   modificationTime: '2020-08-06T11:34:15+00:00',
+  comment: 'bar',
   owner: 'admin',
   method: {
     type: 'Alemba vFire',
@@ -118,8 +119,8 @@ const mockAlerts = {
   },
 };
 
-export const createGetAlertsQueryMock = () =>
-  createGenericQueryMock(GET_ALERTS, {alerts: mockAlerts});
+export const createGetAlertsQueryMock = (variables = {}) =>
+  createGenericQueryMock(GET_ALERTS, {alerts: mockAlerts}, variables);
 
 const createAlertResult = {
   createAlert: {

@@ -48,6 +48,7 @@ export const GET_ALERTS = gql`
           inUse
           writable
           owner
+          comment
           creationTime
           modificationTime
           tasks {

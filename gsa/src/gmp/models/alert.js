@@ -23,6 +23,7 @@ import {forEach, map} from '../utils/array';
 import {parseYesNo, YES_VALUE} from '../parser.js';
 
 import Model, {parseModelFromElement} from '../model.js';
+import Task from './task';
 
 export const EVENT_TYPE_UPDATED_SECINFO = 'Updated SecInfo arrived';
 export const EVENT_TYPE_NEW_SECINFO = 'New SecInfo arrived';
@@ -72,7 +73,7 @@ export const isSecinfoEvent = event =>
   event === EVENT_TYPE_NEW_SECINFO || event === EVENT_TYPE_UPDATED_SECINFO;
 
 const create_values = data => {
-  const value = isEmpty(data.__text) ? undefined : data.__text;
+  const value = isEmpty(data.value) ? undefined : data.value;
   const values = {value};
   const {__text, name, ...other} = data;
 
@@ -91,6 +92,61 @@ const create_values = data => {
 
 class Alert extends Model {
   static entityType = 'alert';
+
+  static parseObject(object) {
+    const ret = super.parseObject(object);
+
+    const types = ['condition', 'method', 'event'];
+
+    for (const type of types) {
+      if (isObject(ret[type])) {
+        const data = {};
+
+        forEach(ret[type].data, value => {
+          data[value.name] = create_values(value);
+        });
+
+        ret[type] = {
+          type: ret[type].type,
+          data,
+        };
+      } else {
+        ret[type] = {
+          type: ret[type],
+          data: {},
+        };
+      }
+    }
+
+    // Finished working up to here.
+
+    if (isDefined(ret.filter)) {
+      ret.filter = parseModelFromElement(ret.filter, 'filter');
+    }
+
+    if (isDefined(object.tasks)) {
+      ret.tasks = object.tasks.map(task => Task.fromObject(task));
+    } else {
+      ret.tasks = [];
+    }
+
+    const methDatRepForm = ret.method.data.report_formats;
+
+    if (isDefined(methDatRepForm) && isDefined(methDatRepForm.value)) {
+      const methDatRepFormSplit = methDatRepForm.value.split(',');
+      ret.method.data.report_formats = methDatRepFormSplit.map(rf => rf.trim());
+    } else {
+      ret.method.data.report_formats = [];
+    }
+
+    if (isDefined(ret.method.data.notice?.value)) {
+      ret.method.data.notice.value = ret.method.data.notice.value.toString();
+    }
+
+    ret.active = parseYesNo(object.active);
+
+    return ret;
+  }
 
   static parseElement(element) {
     const ret = super.parseElement(element);
