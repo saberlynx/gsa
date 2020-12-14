@@ -506,3 +506,39 @@ export const useDeleteScanConfigsByIds = options => {
   );
   return [deleteScanConfigsByIds, data];
 };
+
+export const useModifyScanConfig = options => {
+  const [querySetName] = useMutation(MODIFY_SCAN_CONFIG_SET_NAME, options);
+
+  const [querySetComment] = useMutation(
+    MODIFY_SCAN_CONFIG_SET_COMMENT,
+    options,
+  );
+
+  const modifyScanConfig = useCallback(saveData => {
+    const {name, id} = saveData;
+    return querySetName({
+      ...options,
+      variables: {
+        input: {
+          name,
+          id,
+        },
+      },
+    }).then(() => {
+      const {comment} = saveData;
+
+      return querySetComment({
+        ...options,
+        variables: {
+          input: {
+            id,
+            comment,
+          },
+        },
+      });
+    });
+  });
+
+  return modifyScanConfig;
+};

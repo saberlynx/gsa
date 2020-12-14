@@ -111,6 +111,15 @@ export class ScanConfigCommand extends EntityCommand {
     const selectData = isDefined(select)
       ? convertSelect(select, 'select:')
       : {};
+
+    console.log(
+      trendData,
+      scannerPreferenceData,
+      selectData,
+      id,
+      comment,
+      name,
+    );
     const data = {
       ...trendData,
       ...scannerPreferenceData,

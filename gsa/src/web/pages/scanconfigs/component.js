@@ -35,6 +35,7 @@ import {
   useImportScanConfig,
   useCreateScanConfig,
   useLoadScanConfigPromise,
+  useModifyScanConfig,
 } from 'web/graphql/scanconfigs';
 import {useLazyGetScanners} from 'web/graphql/scanners';
 
@@ -94,6 +95,7 @@ const ScanConfigComponent = ({
   const loadScanConfigPromise = useLoadScanConfigPromise();
   const [importScanConfig] = useImportScanConfig();
   const [createScanConfig] = useCreateScanConfig();
+  const modifyScanConfig = useModifyScanConfig();
   const [
     loadScanners,
     {scanners: loadedScanners, loading: isLoadingScanners},
@@ -148,7 +150,7 @@ const ScanConfigComponent = ({
       saveData = {name, comment, id};
     }
 
-    return gmp.scanconfig.save(saveData).then(() => closeEditConfigDialog());
+    return modifyScanConfig(saveData).then(() => closeEditConfigDialog());
   };
 
   const openCreateConfigDialog = () => {
