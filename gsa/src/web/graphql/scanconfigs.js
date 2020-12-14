@@ -236,6 +236,64 @@ export const DELETE_SCAN_CONFIGS_BY_FILTER = gql`
   }
 `;
 
+export const MODIFY_SCAN_CONFIG_SET_NAME = gql`
+  mutation modifyScanConfigSetName($input: ModifyScanConfigSetNameInput!) {
+    modifyScanConfigSetName(input: $input) {
+      ok
+    }
+  }
+`;
+
+export const MODIFY_SCAN_CONFIG_SET_COMMENT = gql`
+  mutation modifyScanConfigSetComment(
+    $input: ModifyScanConfigSetCommentInput!
+  ) {
+    modifyScanConfigSetComment(input: $input) {
+      ok
+    }
+  }
+`;
+
+export const MODIFY_SCAN_CONFIG_SET_FAMILY_SELECTION = gql`
+  mutation modifyScanConfigSetFamilySelection(
+    $input: ModifyScanConfigSetFamilySelectionInput!
+  ) {
+    modifyScanConfigSetFamilySelection(input: $input) {
+      ok
+    }
+  }
+`;
+
+export const MODIFY_SCAN_CONFIG_SET_NVT_PREFERENCE = gql`
+  mutation modifyScanConfigSetNvtPreference(
+    $input: ModifyScanConfigSetNvtPreferenceInput!
+  ) {
+    modifyScanConfigSetNvtPreference(input: $input) {
+      ok
+    }
+  }
+`;
+
+export const MODIFY_SCAN_CONFIG_SET_NVT_SELECTION = gql`
+  mutation modifyScanConfigSetNvtSelection(
+    $input: ModifyScanConfigSetNvtSelectionInput!
+  ) {
+    modifyScanConfigSetNvtSelection(input: $input) {
+      ok
+    }
+  }
+`;
+
+export const MODIFY_SCAN_CONFIG_SET_SCANNER_PREFERENCE = gql`
+  mutation modifyScanConfigSetScannerPreference(
+    $input: ModifyScanConfigSetScannerPreferenceInput!
+  ) {
+    modifyScanConfigSetScannerPreference(input: $input) {
+      ok
+    }
+  }
+`;
+
 export const useDeleteScanConfigsByFilter = options => {
   const [queryDeleteScanConfigsByFilter, data] = useMutation(
     DELETE_SCAN_CONFIGS_BY_FILTER,
