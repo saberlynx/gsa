@@ -36,6 +36,7 @@ import {
   useCreateScanConfig,
   useLoadScanConfigPromise,
   useModifyScanConfig,
+  useModifyScanConfigFamily,
 } from 'web/graphql/scanconfigs';
 import {useLazyGetScanners} from 'web/graphql/scanners';
 
@@ -96,6 +97,7 @@ const ScanConfigComponent = ({
   const [importScanConfig] = useImportScanConfig();
   const [createScanConfig] = useCreateScanConfig();
   const modifyScanConfig = useModifyScanConfig();
+  const modifyScanConfigFamily = useModifyScanConfigFamily();
   const [
     loadScanners,
     {scanners: loadedScanners, loading: isLoadingScanners},
@@ -330,13 +332,11 @@ const ScanConfigComponent = ({
 
   const handleSaveConfigFamily = ({familyName, configId, selected}) => {
     handleInteraction();
-
-    return gmp.scanconfig
-      .saveScanConfigFamily({
-        id: configId,
-        familyName,
-        selected,
-      })
+    return modifyScanConfigFamily({
+      id: configId,
+      family: familyName,
+      selected,
+    })
       .then(() => loadEditScanConfigSettings(configId, true))
       .then(() => {
         closeEditConfigFamilyDialog();

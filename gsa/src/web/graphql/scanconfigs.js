@@ -615,3 +615,33 @@ export const useModifyScanConfig = options => {
 
   return modifyScanConfig;
 };
+
+export const useModifyScanConfigFamily = options => {
+  const [querySetNvtSelection] = useMutation(
+    MODIFY_SCAN_CONFIG_SET_NVT_SELECTION,
+    options,
+  );
+
+  const modifyScanConfigFamily = useCallback(({id, family, selected}) => {
+    const oidKeys = Object.keys(selected);
+    const nvtOids = [];
+
+    oidKeys.forEach(key => {
+      if (selected[key] === 1) {
+        nvtOids.push(key);
+      }
+    });
+    return querySetNvtSelection({
+      ...options,
+      variables: {
+        input: {
+          id,
+          family,
+          nvtOids,
+        },
+      },
+    });
+  });
+
+  return modifyScanConfigFamily;
+};
