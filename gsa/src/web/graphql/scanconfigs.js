@@ -520,6 +520,11 @@ export const useModifyScanConfig = options => {
     options,
   );
 
+  /* const [querySetFamilySelection] = useMutation(
+    MODIFY_SCAN_CONFIG_SET_SCANNER_PREFERENCE,
+    options,
+  ); */
+
   const modifyScanConfig = useCallback(saveData => {
     const {name, id} = saveData;
     return querySetName({
@@ -549,10 +554,10 @@ export const useModifyScanConfig = options => {
         if (hasValue(scannerPreferenceValues)) {
           const prefKeys = Object.keys(scannerPreferenceValues);
 
-          const promises = [];
+          const prefPromises = [];
 
           prefKeys.forEach(key => {
-            promises.push(
+            prefPromises.push(
               querySetScannerPreference({
                 ...options,
                 variables: {
@@ -565,12 +570,45 @@ export const useModifyScanConfig = options => {
               }),
             );
           });
-          setScannerPreferencePromise = Promise.all(promises);
+          setScannerPreferencePromise = Promise.all(prefPromises);
         } else {
           setScannerPreferencePromise = Promise.resolve();
         }
 
-        return setScannerPreferencePromise;
+        return setScannerPreferencePromise.then(
+          console.log('Setting nvt family prefs...'),
+
+          /* () => {
+            const {select, trend} = saveData;
+  
+            let setConfigFamilySelectionPromise;
+            if (hasValue(select) && hasValue(trend)) {
+              const families = [];
+              const familyKeys = Object.keys(select);
+  
+              familyKeys.forEach(key => {
+                if (select[key] === 1) {
+                  families.push({name: key, growing: trend[key]});
+                }
+              });
+  
+              setConfigFamilySelectionPromise = querySetFamilySelection({
+                ...options,
+                variables: {
+                  input: {
+                    id,
+                    families,
+                  }
+                }
+              });
+            } else {
+              setConfigFamilySelectionPromise = Promise.resolve();
+            }
+  
+            return setConfigFamilySelectionPromise.then(() => {
+              console.log('setConfigFamilySelectionPromise called')
+            } */
+        );
       });
     });
   });
