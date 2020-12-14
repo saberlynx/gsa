@@ -28,7 +28,7 @@ import {
 import ScanConfig from 'gmp/models/scanconfig';
 import CollectionCounts from 'gmp/collection/collectioncounts';
 
-import {isDefined} from 'gmp/utils/identity';
+import {hasValue, isDefined} from 'gmp/utils/identity';
 
 export const GET_SCAN_CONFIG = gql`
   query ScanConfig($id: UUID!) {
@@ -515,6 +515,11 @@ export const useModifyScanConfig = options => {
     options,
   );
 
+  const [querySetScannerPreference] = useMutation(
+    MODIFY_SCAN_CONFIG_SET_SCANNER_PREFERENCE,
+    options,
+  );
+
   const modifyScanConfig = useCallback(saveData => {
     const {name, id} = saveData;
     return querySetName({
@@ -536,6 +541,36 @@ export const useModifyScanConfig = options => {
             comment,
           },
         },
+      }).then(() => {
+        const {scannerPreferenceValues} = saveData;
+
+        let setScannerPreferencePromise;
+
+        if (hasValue(scannerPreferenceValues)) {
+          const prefKeys = Object.keys(scannerPreferenceValues);
+
+          const promises = [];
+
+          prefKeys.forEach(key => {
+            promises.push(
+              querySetScannerPreference({
+                ...options,
+                variables: {
+                  input: {
+                    id,
+                    name: 'scanner:scanner:scanner:' + key,
+                    value: scannerPreferenceValues[key],
+                  },
+                },
+              }),
+            );
+          });
+          setScannerPreferencePromise = Promise.all(promises);
+        } else {
+          setScannerPreferencePromise = Promise.resolve();
+        }
+
+        return setScannerPreferencePromise;
       });
     });
   });
