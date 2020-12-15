@@ -525,60 +525,61 @@ export const useModifyScanConfig = options => {
     options,
   ); */
 
-  const modifyScanConfig = useCallback(saveData => {
-    const {name, id} = saveData;
-    return querySetName({
-      ...options,
-      variables: {
-        input: {
-          name,
-          id,
-        },
-      },
-    }).then(() => {
-      const {comment} = saveData;
-
-      return querySetComment({
+  const modifyScanConfig = useCallback(
+    (saveData, options) => {
+      const {name, id} = saveData;
+      return querySetName({
         ...options,
         variables: {
           input: {
+            name,
             id,
-            comment,
           },
         },
       }).then(() => {
-        const {scannerPreferenceValues} = saveData;
+        const {comment} = saveData;
 
-        let setScannerPreferencePromise;
+        return querySetComment({
+          ...options,
+          variables: {
+            input: {
+              id,
+              comment,
+            },
+          },
+        }).then(() => {
+          const {scannerPreferenceValues} = saveData;
 
-        if (hasValue(scannerPreferenceValues)) {
-          const prefKeys = Object.keys(scannerPreferenceValues);
+          let setScannerPreferencePromise;
 
-          const prefPromises = [];
+          if (hasValue(scannerPreferenceValues)) {
+            const prefKeys = Object.keys(scannerPreferenceValues);
 
-          prefKeys.forEach(key => {
-            prefPromises.push(
-              querySetScannerPreference({
-                ...options,
-                variables: {
-                  input: {
-                    id,
-                    name: 'scanner:scanner:scanner:' + key,
-                    value: scannerPreferenceValues[key],
+            const prefPromises = [];
+
+            prefKeys.forEach(key => {
+              prefPromises.push(
+                querySetScannerPreference({
+                  ...options,
+                  variables: {
+                    input: {
+                      id,
+                      name: 'scanner:scanner:scanner:' + key,
+                      value: scannerPreferenceValues[key],
+                    },
                   },
-                },
-              }),
-            );
-          });
-          setScannerPreferencePromise = Promise.all(prefPromises);
-        } else {
-          setScannerPreferencePromise = Promise.resolve();
-        }
+                }),
+              );
+            });
+            setScannerPreferencePromise = Promise.all(prefPromises);
+          } else {
+            setScannerPreferencePromise = Promise.resolve();
+          }
 
-        return setScannerPreferencePromise.then(
-          console.log('Setting nvt family prefs...'),
+          return setScannerPreferencePromise.then(
+            console.log('Setting nvt family prefs...'),
 
-          /* () => {
+            /* () => {
             const {select, trend} = saveData;
   
             let setConfigFamilySelectionPromise;
@@ -608,10 +609,12 @@ export const useModifyScanConfig = options => {
             return setConfigFamilySelectionPromise.then(() => {
               console.log('setConfigFamilySelectionPromise called')
             } */
-        );
+          );
+        });
       });
-    });
-  });
+    },
+    [querySetName, querySetComment, querySetScannerPreference],
+  );
 
   return modifyScanConfig;
 };
@@ -622,26 +625,29 @@ export const useModifyScanConfigFamily = options => {
     options,
   );
 
-  const modifyScanConfigFamily = useCallback(({id, family, selected}) => {
-    const oidKeys = Object.keys(selected);
-    const nvtOids = [];
+  const modifyScanConfigFamily = useCallback(
+    ({id, family, selected}, options) => {
+      const oidKeys = Object.keys(selected);
+      const nvtOids = [];
 
-    oidKeys.forEach(key => {
-      if (selected[key] === 1) {
-        nvtOids.push(key);
-      }
-    });
-    return querySetNvtSelection({
-      ...options,
-      variables: {
-        input: {
-          id,
-          family,
-          nvtOids,
+      oidKeys.forEach(key => {
+        if (selected[key] === 1) {
+          nvtOids.push(key);
+        }
+      });
+      return querySetNvtSelection({
+        ...options,
+        variables: {
+          input: {
+            id,
+            family,
+            nvtOids,
+          },
         },
-      },
-    });
-  });
+      });
+    },
+    [querySetNvtSelection],
+  );
 
   return modifyScanConfigFamily;
 };
