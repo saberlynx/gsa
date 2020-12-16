@@ -37,6 +37,7 @@ import {
   useLoadScanConfigPromise,
   useModifyScanConfig,
   useModifyScanConfigFamily,
+  useModifyScanConfigNvt,
 } from 'web/graphql/scanconfigs';
 import {useLazyGetScanners} from 'web/graphql/scanners';
 
@@ -98,6 +99,7 @@ const ScanConfigComponent = ({
   const [createScanConfig] = useCreateScanConfig();
   const modifyScanConfig = useModifyScanConfig();
   const modifyScanConfigFamily = useModifyScanConfigFamily();
+  const modifyScanConfigNvt = useModifyScanConfigNvt();
   const [
     loadScanners,
     {scanners: loadedScanners, loading: isLoadingScanners},
@@ -352,16 +354,16 @@ const ScanConfigComponent = ({
   }) => {
     const {editConfigFamilyDialogVisible, familyName} = state;
 
-    console.log(configId, timeout, nvtOid, preferenceValues);
+    console.log(preferenceValues);
+
     handleInteraction();
 
-    return gmp.scanconfig
-      .saveScanConfigNvt({
-        id: configId,
-        timeout: useDefaultTimeout === '1' ? undefined : timeout,
-        oid: nvtOid,
-        preferenceValues,
-      })
+    return modifyScanConfigNvt({
+      id: configId,
+      timeout: useDefaultTimeout === '1' ? undefined : timeout,
+      oid: nvtOid,
+      preferenceValues,
+    })
       .then(() => {
         let promise;
 

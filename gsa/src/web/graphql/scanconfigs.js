@@ -29,6 +29,8 @@ import ScanConfig from 'gmp/models/scanconfig';
 import CollectionCounts from 'gmp/collection/collectioncounts';
 
 import {hasValue, isDefined} from 'gmp/utils/identity';
+import {convertPreferences} from 'gmp/commands/scanconfigs';
+import readFileToText from 'web/utils/readFileToText';
 
 export const GET_SCAN_CONFIG = gql`
   query ScanConfig($id: UUID!) {
@@ -650,4 +652,59 @@ export const useModifyScanConfigFamily = options => {
   );
 
   return modifyScanConfigFamily;
+};
+
+const convertHyperionPreferences = async (values = {}, nvtOid) => {
+  const ret = {};
+  for (const [prop, data] of Object.entries(values)) {
+    const {id, type, value} = data;
+    if (isDefined(value)) {
+      const typestring = nvtOid + ':' + id + ':' + type + ':' + prop;
+      if (type === 'file') {
+        ret[typestring] = await readFileToText(value);
+      } else {
+        ret[typestring] = value;
+      }
+    }
+  }
+  return ret;
+};
+
+export const useModifyScanConfigNvt = options => {
+  const [querySetNvtPreference] = useMutation(
+    MODIFY_SCAN_CONFIG_SET_NVT_PREFERENCE,
+    options,
+  );
+
+  const modifyScanConfigNvt = useCallback(
+    async ({id, timeout, oid, preferenceValues}, options) => {
+      const convertedPrefValues = await convertHyperionPreferences(
+        preferenceValues,
+        oid,
+      ); // don't merge without password, key and cert parsing!
+      const prefKeys = Object.keys(convertedPrefValues);
+      const promises = [];
+
+      prefKeys.forEach(key => {
+        promises.push(
+          querySetNvtPreference({
+            ...options,
+            variables: {
+              input: {
+                id,
+                nvtOid: oid,
+                name: key,
+                value: convertedPrefValues[key],
+              },
+            },
+          }),
+        );
+      });
+
+      return Promise.all(promises);
+    },
+    [querySetNvtPreference],
+  );
+
+  return modifyScanConfigNvt;
 };
