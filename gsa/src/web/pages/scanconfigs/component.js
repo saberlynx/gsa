@@ -352,6 +352,7 @@ const ScanConfigComponent = ({
   }) => {
     const {editConfigFamilyDialogVisible, familyName} = state;
 
+    console.log(configId, timeout, nvtOid, preferenceValues);
     handleInteraction();
 
     return gmp.scanconfig

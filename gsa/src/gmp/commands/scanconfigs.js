@@ -177,6 +177,7 @@ export class ScanConfigCommand extends EntityCommand {
   }
 
   saveScanConfigNvt({id, timeout, oid, preferenceValues}) {
+    console.log(convertPreferences(preferenceValues, oid));
     const data = {
       ...convertPreferences(preferenceValues, oid),
       cmd: 'save_config_nvt',
