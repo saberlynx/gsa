@@ -522,10 +522,10 @@ export const useModifyScanConfig = options => {
     options,
   );
 
-  /* const [querySetFamilySelection] = useMutation(
-    MODIFY_SCAN_CONFIG_SET_SCANNER_PREFERENCE,
+  const [querySetFamilySelection] = useMutation(
+    MODIFY_SCAN_CONFIG_SET_FAMILY_SELECTION,
     options,
-  ); */
+  );
 
   const modifyScanConfig = useCallback(
     (saveData, options) => {
@@ -578,40 +578,36 @@ export const useModifyScanConfig = options => {
             setScannerPreferencePromise = Promise.resolve();
           }
 
-          return setScannerPreferencePromise.then(
-            console.log('Setting nvt family prefs...'),
-
-            /* () => {
+          return setScannerPreferencePromise.then(() => {
             const {select, trend} = saveData;
-  
+
             let setConfigFamilySelectionPromise;
             if (hasValue(select) && hasValue(trend)) {
               const families = [];
               const familyKeys = Object.keys(select);
-  
+
               familyKeys.forEach(key => {
                 if (select[key] === 1) {
                   families.push({name: key, growing: trend[key]});
                 }
               });
-  
+
+              console.log(families);
               setConfigFamilySelectionPromise = querySetFamilySelection({
                 ...options,
                 variables: {
                   input: {
                     id,
                     families,
-                  }
-                }
+                  },
+                },
               });
             } else {
               setConfigFamilySelectionPromise = Promise.resolve();
             }
-  
-            return setConfigFamilySelectionPromise.then(() => {
-              console.log('setConfigFamilySelectionPromise called')
-            } */
-          );
+
+            return setConfigFamilySelectionPromise;
+          });
         });
       });
     },
@@ -677,11 +673,11 @@ export const useModifyScanConfigNvt = options => {
   );
 
   const modifyScanConfigNvt = useCallback(
-    async ({id, timeout, oid, preferenceValues}, options) => {
+    async ({id, oid, preferenceValues}, options) => {
       const convertedPrefValues = await convertHyperionPreferences(
         preferenceValues,
         oid,
-      ); // don't merge without password, key and cert parsing!
+      );
       const prefKeys = Object.keys(convertedPrefValues);
       const promises = [];
 
