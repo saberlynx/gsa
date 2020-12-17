@@ -671,13 +671,13 @@ export const useModifyScanConfig = options => {
   return modifyScanConfig;
 };
 
-export const useModifyScanConfigFamily = options => {
-  const [querySetNvtSelection] = useMutation(
+export const useModifyScanConfigSetNvtSelection = options => {
+  const [queryModifyScanConfigSetNvtSelection] = useMutation(
     MODIFY_SCAN_CONFIG_SET_NVT_SELECTION,
     options,
   );
 
-  const modifyScanConfigFamily = useCallback(
+  const modifyScanConfigSetNvtSelection = useCallback(
     ({id, family, selected}, options) => {
       const oidKeys = Object.keys(selected);
       const nvtOids = [];
@@ -687,7 +687,7 @@ export const useModifyScanConfigFamily = options => {
           nvtOids.push(key);
         }
       });
-      return querySetNvtSelection({
+      return queryModifyScanConfigSetNvtSelection({
         ...options,
         variables: {
           input: {
@@ -698,10 +698,10 @@ export const useModifyScanConfigFamily = options => {
         },
       });
     },
-    [querySetNvtSelection],
+    [queryModifyScanConfigSetNvtSelection],
   );
 
-  return modifyScanConfigFamily;
+  return modifyScanConfigSetNvtSelection;
 };
 
 const convertHyperionPreferences = (values = {}, nvtOid) => {

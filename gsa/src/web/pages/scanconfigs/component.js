@@ -36,7 +36,7 @@ import {
   useCreateScanConfig,
   useLoadScanConfigPromise,
   useModifyScanConfig,
-  useModifyScanConfigFamily,
+  useModifyScanConfigSetNvtSelection,
   useModifyScanConfigNvt,
 } from 'web/graphql/scanconfigs';
 import {useLazyGetScanners} from 'web/graphql/scanners';
@@ -98,7 +98,7 @@ const ScanConfigComponent = ({
   const [importScanConfig] = useImportScanConfig();
   const [createScanConfig] = useCreateScanConfig();
   const modifyScanConfig = useModifyScanConfig();
-  const modifyScanConfigFamily = useModifyScanConfigFamily();
+  const modifyScanConfigSetNvtSelection = useModifyScanConfigSetNvtSelection();
   const modifyScanConfigNvt = useModifyScanConfigNvt();
   const [
     loadScanners,
@@ -334,7 +334,7 @@ const ScanConfigComponent = ({
 
   const handleSaveConfigFamily = ({familyName, configId, selected}) => {
     handleInteraction();
-    return modifyScanConfigFamily({
+    return modifyScanConfigSetNvtSelection({
       id: configId,
       family: familyName,
       selected,
@@ -353,8 +353,6 @@ const ScanConfigComponent = ({
     preferenceValues,
   }) => {
     const {editConfigFamilyDialogVisible, familyName} = state;
-
-    console.log(preferenceValues);
 
     handleInteraction();
 
