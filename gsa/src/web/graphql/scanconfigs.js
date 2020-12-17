@@ -722,13 +722,13 @@ const convertHyperionPreferences = (values = {}, nvtOid) => {
   return ret;
 };
 
-export const useModifyScanConfigNvt = options => {
-  const [querySetNvtPreference] = useMutation(
+export const useModifyScanConfigSetNvtPreference = options => {
+  const [queryModifyScanConfigSetNvtPreference] = useMutation(
     MODIFY_SCAN_CONFIG_SET_NVT_PREFERENCE,
     options,
   );
 
-  const modifyScanConfigNvt = useCallback(
+  const modifyScanConfigSetNvtPreference = useCallback(
     async ({id, oid, preferenceValues}, options) => {
       const convertedPrefValues = await convertHyperionPreferences(
         preferenceValues,
@@ -739,7 +739,7 @@ export const useModifyScanConfigNvt = options => {
 
       prefKeys.forEach(key => {
         promises.push(
-          querySetNvtPreference({
+          queryModifyScanConfigSetNvtPreference({
             ...options,
             variables: {
               input: {
@@ -755,8 +755,8 @@ export const useModifyScanConfigNvt = options => {
 
       return Promise.all(promises);
     },
-    [querySetNvtPreference],
+    [queryModifyScanConfigSetNvtPreference],
   );
 
-  return modifyScanConfigNvt;
+  return modifyScanConfigSetNvtPreference;
 };

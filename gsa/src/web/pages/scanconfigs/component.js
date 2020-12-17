@@ -37,7 +37,7 @@ import {
   useLoadScanConfigPromise,
   useModifyScanConfig,
   useModifyScanConfigSetNvtSelection,
-  useModifyScanConfigNvt,
+  useModifyScanConfigSetNvtPreference,
 } from 'web/graphql/scanconfigs';
 import {useLazyGetScanners} from 'web/graphql/scanners';
 
@@ -99,7 +99,7 @@ const ScanConfigComponent = ({
   const [createScanConfig] = useCreateScanConfig();
   const modifyScanConfig = useModifyScanConfig();
   const modifyScanConfigSetNvtSelection = useModifyScanConfigSetNvtSelection();
-  const modifyScanConfigNvt = useModifyScanConfigNvt();
+  const modifyScanConfigSetNvtPreference = useModifyScanConfigSetNvtPreference();
   const [
     loadScanners,
     {scanners: loadedScanners, loading: isLoadingScanners},
@@ -356,7 +356,7 @@ const ScanConfigComponent = ({
 
     handleInteraction();
 
-    return modifyScanConfigNvt({
+    return modifyScanConfigSetNvtPreference({
       id: configId,
       timeout: useDefaultTimeout === '1' ? undefined : timeout,
       oid: nvtOid,
