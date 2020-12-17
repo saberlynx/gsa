@@ -25,11 +25,13 @@ import {
   useMutation,
   useQuery,
 } from '@apollo/client';
-import ScanConfig from 'gmp/models/scanconfig';
+
 import CollectionCounts from 'gmp/collection/collectioncounts';
 
+import ScanConfig from 'gmp/models/scanconfig';
+
 import {hasValue, isDefined} from 'gmp/utils/identity';
-import {convertPreferences} from 'gmp/commands/scanconfigs';
+
 import readFileToText from 'web/utils/readFileToText';
 
 export const GET_SCAN_CONFIG = gql`
