@@ -32,7 +32,9 @@ import {
   GET_SCAN_CONFIG,
   GET_SCAN_CONFIGS,
   IMPORT_SCAN_CONFIG,
+  MODIFY_SCAN_CONFIG_SET_COMMENT,
   MODIFY_SCAN_CONFIG_SET_NAME,
+  MODIFY_SCAN_CONFIG_SET_SCANNER_PREFERENCE,
 } from '../scanconfigs';
 
 export const nonWritableConfig = deepFreeze({
@@ -402,5 +404,34 @@ export const createModifyScanConfigSetNameQueryMock = (
   createGenericQueryMock(
     MODIFY_SCAN_CONFIG_SET_NAME,
     createGenericMutationResult('modifyScanConfigSetName'),
+    {input},
+  );
+
+const modifyScanConfigSetCommentInput = {
+  id: '314',
+  comment: 'foo',
+};
+
+export const createModifyScanConfigSetCommentQueryMock = (
+  input = modifyScanConfigSetCommentInput,
+) =>
+  createGenericQueryMock(
+    MODIFY_SCAN_CONFIG_SET_COMMENT,
+    createGenericMutationResult('modifyScanConfigSetComment'),
+    {input},
+  );
+
+const modifyScanConfigSetScannerPreferenceInput = {
+  id: '314',
+  name: 'scanner:scanner:scanner:nomushrooms',
+  value: 'absolutelynot',
+};
+
+export const createModifyScanConfigSetScannerPreferenceQueryMock = (
+  input = modifyScanConfigSetScannerPreferenceInput,
+) =>
+  createGenericQueryMock(
+    MODIFY_SCAN_CONFIG_SET_SCANNER_PREFERENCE,
+    createGenericMutationResult('modifyScanConfigSetScannerPreference'),
     {input},
   );
