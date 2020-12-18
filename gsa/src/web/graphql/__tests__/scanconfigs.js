@@ -52,6 +52,7 @@ import {
   createModifyScanConfigSetScannerPreferenceQueryMock,
   createModifyScanConfigSetFamilySelectionQueryMock,
 } from '../__mocks__/scanconfigs';
+import {GraphQLError} from 'graphql';
 
 const GetLazyScanConfigsComponent = () => {
   const [
@@ -541,7 +542,7 @@ const ModifyScanConfigComponent = ({input}) => {
 };
 
 describe('useModifyScanConfig tests', () => {
-  test.only('should modify scan config', async () => {
+  test('should modify scan config', async () => {
     const saveConfigInput = {
       id: '314',
       name: 'very fast',
@@ -602,5 +603,132 @@ describe('useModifyScanConfig tests', () => {
       'Scan Config modified.',
     );
     expect(screen.queryByTestId('error')).not.toBeInTheDocument();
+  });
+
+  test('should modify in use scan config', async () => {
+    const saveConfigInput = {
+      id: '314',
+      name: 'very fast',
+      comment: 'foo',
+    }; // in use configs don't have all args
+
+    const [
+      setNameMock,
+      setNameResult,
+    ] = createModifyScanConfigSetNameQueryMock();
+    const [
+      setCommentMock,
+      setCommentResult,
+    ] = createModifyScanConfigSetCommentQueryMock();
+    const [
+      setScannerPreferenceMock,
+      setScannerPreferenceResult,
+    ] = createModifyScanConfigSetScannerPreferenceQueryMock();
+    const [
+      setFamilySelectionMock,
+      setFamilySelectionResult,
+    ] = createModifyScanConfigSetFamilySelectionQueryMock();
+
+    const {render} = rendererWith({
+      queryMocks: [
+        setNameMock,
+        setCommentMock,
+        setScannerPreferenceMock,
+        setFamilySelectionMock,
+      ],
+    });
+
+    render(<ModifyScanConfigComponent input={saveConfigInput} />);
+
+    await wait();
+
+    const button = screen.getByTestId('modify-scan-config');
+    fireEvent.click(button);
+
+    await wait();
+
+    expect(setNameResult).toHaveBeenCalled();
+    expect(setCommentResult).toHaveBeenCalled();
+
+    await wait();
+
+    expect(setScannerPreferenceResult).not.toHaveBeenCalled();
+    await wait();
+
+    expect(setFamilySelectionResult).not.toHaveBeenCalled();
+
+    await wait();
+
+    expect(screen.queryByTestId('notification')).toHaveTextContent(
+      'Scan Config modified.',
+    );
+    expect(screen.queryByTestId('error')).not.toBeInTheDocument();
+  });
+
+  test('should catch error state', async () => {
+    const saveConfigInput = {
+      id: '314',
+      name: 'very fast',
+      comment: 'foo',
+      scannerPreferenceValues: {nomushrooms: 'absolutelynot'},
+      select: {hello: 1},
+      trend: {hello: 0},
+    };
+    const error = new GraphQLError('Oops. Something went wrong :(');
+
+    const [
+      setNameMock,
+      setNameResult,
+    ] = createModifyScanConfigSetNameQueryMock();
+    const [
+      setCommentMock,
+      setCommentResult,
+    ] = createModifyScanConfigSetCommentQueryMock();
+    const [
+      setScannerPreferenceMock,
+      setScannerPreferenceResult,
+    ] = createModifyScanConfigSetScannerPreferenceQueryMock([error]);
+    const [
+      setFamilySelectionMock,
+      setFamilySelectionResult,
+    ] = createModifyScanConfigSetFamilySelectionQueryMock();
+
+    const {render} = rendererWith({
+      queryMocks: [
+        setNameMock,
+        setCommentMock,
+        setScannerPreferenceMock,
+        setFamilySelectionMock,
+      ],
+    });
+
+    render(<ModifyScanConfigComponent input={saveConfigInput} />);
+
+    await wait();
+
+    const button = screen.getByTestId('modify-scan-config');
+    fireEvent.click(button);
+
+    await wait();
+
+    expect(setNameResult).toHaveBeenCalled();
+    expect(setCommentResult).toHaveBeenCalled();
+
+    await wait();
+
+    expect(setScannerPreferenceResult).toHaveBeenCalled();
+    await wait();
+
+    expect(setFamilySelectionResult).not.toHaveBeenCalled();
+
+    await wait();
+
+    expect(screen.queryByTestId('notification')).not.toBeInTheDocument();
+
+    const gqlError = screen.queryByTestId('error');
+    expect(gqlError).toBeInTheDocument();
+    expect(gqlError).toHaveTextContent(
+      'There was an error in the request: Error: Oops. Something went wrong :(',
+    );
   });
 });
