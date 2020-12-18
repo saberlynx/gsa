@@ -510,3 +510,30 @@ describe('useExportScanConfigsByFilter tests', () => {
     expect(resultFunc).toHaveBeenCalled();
   });
 });
+
+const ModifyScanConfigComponent = () => {
+  const modifyScanConfig = useModifyScanConfig();
+  const [reportId, setReportId] = useState();
+  const [error, setError] = useState();
+
+  const handleModifyScanConfig = () =>
+    modifyScanConfig({hosts: '127.0.0.1, 192.168.0.1'}, mockCreationDate)
+      .then(id => setReportId(id))
+      .catch(setError);
+
+  return (
+    <div>
+      {reportId && (
+        <span data-testid="started-task">{`Scan Config modified.`}</span>
+      )}
+      {error && (
+        <span data-testid="error">{`There was an error in the request: ${error}`}</span>
+      )}
+      <button data-testid="wizard" onClick={handleModifyScanConfig} />
+    </div>
+  );
+};
+
+describe('useModifyScanConfig tests', () => {
+  test('should modify scan config', () => {});
+});

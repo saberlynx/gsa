@@ -399,13 +399,12 @@ const modifyScanConfigSetNameInput = {
   name: 'very fast',
 };
 
-export const createModifyScanConfigSetNameQueryMock = (
-  input = modifyScanConfigSetNameInput,
-) =>
+export const createModifyScanConfigSetNameQueryMock = errors =>
   createGenericQueryMock(
     MODIFY_SCAN_CONFIG_SET_NAME,
     createGenericMutationResult('modifyScanConfigSetName'),
-    {input},
+    {input: modifyScanConfigSetNameInput},
+    errors,
   );
 
 const modifyScanConfigSetCommentInput = {
@@ -413,13 +412,12 @@ const modifyScanConfigSetCommentInput = {
   comment: 'foo',
 };
 
-export const createModifyScanConfigSetCommentQueryMock = (
-  input = modifyScanConfigSetCommentInput,
-) =>
+export const createModifyScanConfigSetCommentQueryMock = errors =>
   createGenericQueryMock(
     MODIFY_SCAN_CONFIG_SET_COMMENT,
     createGenericMutationResult('modifyScanConfigSetComment'),
-    {input},
+    {input: modifyScanConfigSetCommentInput},
+    errors,
   );
 
 const modifyScanConfigSetScannerPreferenceInput = {
@@ -428,13 +426,12 @@ const modifyScanConfigSetScannerPreferenceInput = {
   value: 'absolutelynot',
 };
 
-export const createModifyScanConfigSetScannerPreferenceQueryMock = (
-  input = modifyScanConfigSetScannerPreferenceInput,
-) =>
+export const createModifyScanConfigSetScannerPreferenceQueryMock = errors =>
   createGenericQueryMock(
     MODIFY_SCAN_CONFIG_SET_SCANNER_PREFERENCE,
     createGenericMutationResult('modifyScanConfigSetScannerPreference'),
-    {input},
+    {input: modifyScanConfigSetScannerPreferenceInput},
+    errors,
   );
 
 const modifyScanConfigSetFamilySelectionInput = {
@@ -442,11 +439,10 @@ const modifyScanConfigSetFamilySelectionInput = {
   families: [{name: 'hello', growing: 0}],
 };
 
-export const createModifyScanConfigSetFamilySelectionQueryMock = (
-  input = modifyScanConfigSetFamilySelectionInput,
-) =>
+export const createModifyScanConfigSetFamilySelectionQueryMock = errors =>
   createGenericQueryMock(
     MODIFY_SCAN_CONFIG_SET_FAMILY_SELECTION,
     createGenericMutationResult('modifyScanConfigSetFamilySelection'),
-    {input},
+    {input: modifyScanConfigSetFamilySelectionInput},
+    errors,
   );
