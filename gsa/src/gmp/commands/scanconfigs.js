@@ -112,14 +112,6 @@ export class ScanConfigCommand extends EntityCommand {
       ? convertSelect(select, 'select:')
       : {};
 
-    console.log(
-      trendData,
-      scannerPreferenceData,
-      selectData,
-      id,
-      comment,
-      name,
-    );
     const data = {
       ...trendData,
       ...scannerPreferenceData,
@@ -177,7 +169,6 @@ export class ScanConfigCommand extends EntityCommand {
   }
 
   saveScanConfigNvt({id, timeout, oid, preferenceValues}) {
-    console.log(convertPreferences(preferenceValues, oid));
     const data = {
       ...convertPreferences(preferenceValues, oid),
       cmd: 'save_config_nvt',

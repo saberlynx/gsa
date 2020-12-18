@@ -126,8 +126,6 @@ export const useRunModifyTask = () => {
             },
             condition: 'ALWAYS',
           };
-          console.log(createAlertInput);
-
           alertPromise = createAlert(createAlertInput);
         } else {
           alertPromise = Promise.resolve();

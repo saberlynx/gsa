@@ -34,6 +34,7 @@ import {
   useExportScanConfigsByFilter,
   useDeleteScanConfigsByIds,
   useDeleteScanConfigsByFilter,
+  useModifyScanConfig,
 } from '../scanconfigs';
 import {
   createGetScanConfigsQueryMock,
@@ -46,6 +47,10 @@ import {
   createDeleteScanConfigsByFilterQueryMock,
   createExportScanConfigsByFilterQueryMock,
   createDeleteScanConfigsByIdsQueryMock,
+  createModifyScanConfigSetCommentQueryMock,
+  createModifyScanConfigSetNameQueryMock,
+  createModifyScanConfigSetScannerPreferenceQueryMock,
+  createModifyScanConfigSetFamilySelectionQueryMock,
 } from '../__mocks__/scanconfigs';
 
 const GetLazyScanConfigsComponent = () => {
@@ -511,29 +516,91 @@ describe('useExportScanConfigsByFilter tests', () => {
   });
 });
 
-const ModifyScanConfigComponent = () => {
+const ModifyScanConfigComponent = ({input}) => {
   const modifyScanConfig = useModifyScanConfig();
-  const [reportId, setReportId] = useState();
+  const [notification, setNotification] = useState();
   const [error, setError] = useState();
 
   const handleModifyScanConfig = () =>
-    modifyScanConfig({hosts: '127.0.0.1, 192.168.0.1'}, mockCreationDate)
-      .then(id => setReportId(id))
+    modifyScanConfig(input)
+      .then(() => setNotification('Scan Config modified.'))
       .catch(setError);
 
   return (
     <div>
-      {reportId && (
-        <span data-testid="started-task">{`Scan Config modified.`}</span>
-      )}
+      {notification && <span data-testid="notification">{notification}</span>}
       {error && (
         <span data-testid="error">{`There was an error in the request: ${error}`}</span>
       )}
-      <button data-testid="wizard" onClick={handleModifyScanConfig} />
+      <button
+        data-testid="modify-scan-config"
+        onClick={handleModifyScanConfig}
+      />
     </div>
   );
 };
 
 describe('useModifyScanConfig tests', () => {
-  test('should modify scan config', () => {});
+  test.only('should modify scan config', async () => {
+    const saveConfigInput = {
+      id: '314',
+      name: 'very fast',
+      comment: 'foo',
+      scannerPreferenceValues: {nomushrooms: 'absolutelynot'},
+      select: {hello: 1},
+      trend: {hello: 0},
+    };
+
+    const [
+      setNameMock,
+      setNameResult,
+    ] = createModifyScanConfigSetNameQueryMock();
+    const [
+      setCommentMock,
+      setCommentResult,
+    ] = createModifyScanConfigSetCommentQueryMock();
+    const [
+      setScannerPreferenceMock,
+      setScannerPreferenceResult,
+    ] = createModifyScanConfigSetScannerPreferenceQueryMock();
+    const [
+      setFamilySelectionMock,
+      setFamilySelectionResult,
+    ] = createModifyScanConfigSetFamilySelectionQueryMock();
+
+    const {render} = rendererWith({
+      queryMocks: [
+        setNameMock,
+        setCommentMock,
+        setScannerPreferenceMock,
+        setFamilySelectionMock,
+      ],
+    });
+
+    render(<ModifyScanConfigComponent input={saveConfigInput} />);
+
+    await wait();
+
+    const button = screen.getByTestId('modify-scan-config');
+    fireEvent.click(button);
+
+    await wait();
+
+    expect(setNameResult).toHaveBeenCalled();
+    expect(setCommentResult).toHaveBeenCalled();
+
+    await wait();
+
+    expect(setScannerPreferenceResult).toHaveBeenCalled();
+    await wait();
+
+    expect(setFamilySelectionResult).toHaveBeenCalled();
+
+    await wait();
+
+    expect(screen.queryByTestId('notification')).toHaveTextContent(
+      'Scan Config modified.',
+    );
+    expect(screen.queryByTestId('error')).not.toBeInTheDocument();
+  });
 });
