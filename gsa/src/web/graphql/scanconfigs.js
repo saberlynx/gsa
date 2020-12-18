@@ -511,104 +511,46 @@ export const useDeleteScanConfigsByIds = options => {
   return [deleteScanConfigsByIds, data];
 };
 
-export const useModifyScanConfigSetName = options => {
+export const useModifyScanConfig = options => {
   const [queryModifyScanConfigSetName] = useMutation(
     MODIFY_SCAN_CONFIG_SET_NAME,
     options,
   );
-
-  const modifyScanConfigSetName = useCallback(
-    // eslint-disable-next-line no-shadow
-    (inputObject, options) =>
-      queryModifyScanConfigSetName({
-        ...options,
-        variables: {input: inputObject},
-      }),
-    [queryModifyScanConfigSetName],
-  );
-
-  return modifyScanConfigSetName;
-};
-
-export const useModifyScanConfigSetComment = options => {
   const [queryModifyScanConfigSetComment] = useMutation(
     MODIFY_SCAN_CONFIG_SET_COMMENT,
     options,
   );
-
-  const modifyScanConfigSetComment = useCallback(
-    // eslint-disable-next-line no-shadow
-    (inputObject, options) =>
-      queryModifyScanConfigSetComment({
-        ...options,
-        variables: {input: inputObject},
-      }),
-    [queryModifyScanConfigSetComment],
-  );
-
-  return modifyScanConfigSetComment;
-};
-
-export const useModifyScanConfigSetScannerPreference = options => {
   const [queryModifyScanConfigSetScannerPreference] = useMutation(
     MODIFY_SCAN_CONFIG_SET_SCANNER_PREFERENCE,
     options,
   );
-
-  const modifyScanConfigSetScannerPreference = useCallback(
-    // eslint-disable-next-line no-shadow
-    (inputObject, options) =>
-      queryModifyScanConfigSetScannerPreference({
-        ...options,
-        variables: {input: inputObject},
-      }),
-    [queryModifyScanConfigSetScannerPreference],
-  );
-
-  return modifyScanConfigSetScannerPreference;
-};
-
-export const useModifyScanConfigSetFamilySelection = options => {
   const [queryModifyScanConfigSetFamilySelection] = useMutation(
     MODIFY_SCAN_CONFIG_SET_FAMILY_SELECTION,
-    options,
-  );
-
-  const modifyScanConfigSetFamilySelection = useCallback(
-    // eslint-disable-next-line no-shadow
-    (inputObject, options) =>
-      queryModifyScanConfigSetFamilySelection({
-        ...options,
-        variables: {input: inputObject},
-      }),
-    [queryModifyScanConfigSetFamilySelection],
-  );
-
-  return modifyScanConfigSetFamilySelection;
-};
-
-export const useModifyScanConfig = options => {
-  const modifyScanConfigSetName = useModifyScanConfigSetName(options);
-  const modifyScanConfigSetComment = useModifyScanConfigSetComment(options);
-  const modifyScanConfigSetScannerPreference = useModifyScanConfigSetScannerPreference(
-    options,
-  );
-  const modifyScanConfigSetFamilySelection = useModifyScanConfigSetFamilySelection(
     options,
   );
 
   const modifyScanConfig = useCallback(
     (saveData, options) => {
       const {name, id} = saveData;
-      return modifyScanConfigSetName({
-        name,
-        id,
+      return queryModifyScanConfigSetName({
+        ...options,
+        variables: {
+          input: {
+            name,
+            id,
+          },
+        },
       }).then(() => {
         const {comment} = saveData;
 
-        return modifyScanConfigSetComment({
-          id,
-          comment,
+        return queryModifyScanConfigSetComment({
+          ...options,
+          variables: {
+            input: {
+              id,
+              comment,
+            },
+          },
         }).then(() => {
           const {scannerPreferenceValues} = saveData;
 
@@ -621,10 +563,15 @@ export const useModifyScanConfig = options => {
 
             prefKeys.forEach(key => {
               prefPromises.push(
-                modifyScanConfigSetScannerPreference({
-                  id,
-                  name: 'scanner:scanner:scanner:' + key,
-                  value: scannerPreferenceValues[key],
+                queryModifyScanConfigSetScannerPreference({
+                  ...options,
+                  variables: {
+                    input: {
+                      id,
+                      name: 'scanner:scanner:scanner:' + key,
+                      value: scannerPreferenceValues[key],
+                    },
+                  },
                 }),
               );
             });
@@ -647,10 +594,15 @@ export const useModifyScanConfig = options => {
                 }
               });
 
-              setConfigFamilySelectionPromise = modifyScanConfigSetFamilySelection(
+              setConfigFamilySelectionPromise = queryModifyScanConfigSetFamilySelection(
                 {
-                  id,
-                  families,
+                  ...options,
+                  variables: {
+                    input: {
+                      id,
+                      families,
+                    },
+                  },
                 },
               );
             } else {
@@ -663,10 +615,10 @@ export const useModifyScanConfig = options => {
       });
     },
     [
-      modifyScanConfigSetName,
-      modifyScanConfigSetComment,
-      modifyScanConfigSetScannerPreference,
-      modifyScanConfigSetFamilySelection,
+      queryModifyScanConfigSetName,
+      queryModifyScanConfigSetComment,
+      queryModifyScanConfigSetScannerPreference,
+      queryModifyScanConfigSetFamilySelection,
     ],
   );
 
