@@ -16,7 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {deepFreeze, createGenericQueryMock} from 'web/utils/testing';
+import {
+  deepFreeze,
+  createGenericQueryMock,
+  createGenericMutationResult,
+} from 'web/utils/testing';
 
 import {
   CLONE_SCAN_CONFIG,
@@ -28,6 +32,7 @@ import {
   GET_SCAN_CONFIG,
   GET_SCAN_CONFIGS,
   IMPORT_SCAN_CONFIG,
+  MODIFY_SCAN_CONFIG_SET_NAME,
 } from '../scanconfigs';
 
 export const nonWritableConfig = deepFreeze({
@@ -384,4 +389,18 @@ export const createExportScanConfigsByFilterQueryMock = (
     EXPORT_SCAN_CONFIGS_BY_FILTER,
     exportScanConfigsByFilterResult,
     {filterString},
+  );
+
+const modifyScanConfigSetNameInput = {
+  id: '314',
+  name: 'very fast',
+};
+
+export const createModifyScanConfigSetNameQueryMock = (
+  input = modifyScanConfigSetNameInput,
+) =>
+  createGenericQueryMock(
+    MODIFY_SCAN_CONFIG_SET_NAME,
+    createGenericMutationResult('modifyScanConfigSetName'),
+    {input},
   );
