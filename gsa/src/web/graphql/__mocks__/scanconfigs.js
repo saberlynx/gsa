@@ -33,6 +33,7 @@ import {
   GET_SCAN_CONFIGS,
   IMPORT_SCAN_CONFIG,
   MODIFY_SCAN_CONFIG_SET_COMMENT,
+  MODIFY_SCAN_CONFIG_SET_FAMILY_SELECTION,
   MODIFY_SCAN_CONFIG_SET_NAME,
   MODIFY_SCAN_CONFIG_SET_SCANNER_PREFERENCE,
 } from '../scanconfigs';
@@ -433,5 +434,19 @@ export const createModifyScanConfigSetScannerPreferenceQueryMock = (
   createGenericQueryMock(
     MODIFY_SCAN_CONFIG_SET_SCANNER_PREFERENCE,
     createGenericMutationResult('modifyScanConfigSetScannerPreference'),
+    {input},
+  );
+
+const modifyScanConfigSetFamilySelectionInput = {
+  id: '314',
+  families: [{name: 'hello', growing: 0}],
+};
+
+export const createModifyScanConfigSetFamilySelectionQueryMock = (
+  input = modifyScanConfigSetFamilySelectionInput,
+) =>
+  createGenericQueryMock(
+    MODIFY_SCAN_CONFIG_SET_FAMILY_SELECTION,
+    createGenericMutationResult('modifyScanConfigSetFamilySelection'),
     {input},
   );
