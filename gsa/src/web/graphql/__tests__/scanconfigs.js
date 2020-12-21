@@ -35,6 +35,7 @@ import {
   useDeleteScanConfigsByIds,
   useDeleteScanConfigsByFilter,
   useModifyScanConfig,
+  useModifyScanConfigSetNvtPreference,
 } from '../scanconfigs';
 import {
   createGetScanConfigsQueryMock,
@@ -51,6 +52,8 @@ import {
   createModifyScanConfigSetNameQueryMock,
   createModifyScanConfigSetScannerPreferenceQueryMock,
   createModifyScanConfigSetFamilySelectionQueryMock,
+  createModifyScanConfigSetNvtPreferenceQueryMock,
+  modifyScanConfigSetNvtPreferenceInput,
 } from '../__mocks__/scanconfigs';
 import {GraphQLError} from 'graphql';
 
@@ -540,6 +543,27 @@ const ModifyScanConfigComponent = ({input}) => {
     </div>
   );
 };
+const ModifyScanConfigSetNvtPreferenceComponent = ({input}) => {
+  const [notification, setNotification] = useState('');
+
+  const modifyScanConfigSetNvtSelection = useModifyScanConfigSetNvtPreference();
+
+  const handleModifyResult = () => {
+    setNotification(`NVT preference modified.`);
+  };
+
+  return (
+    <div>
+      <button
+        data-testid="modify-nvt-preference"
+        onClick={() =>
+          modifyScanConfigSetNvtSelection(input).then(handleModifyResult)
+        }
+      />
+      <h3 data-testid="notification">{notification}</h3>
+    </div>
+  );
+};
 
 describe('useModifyScanConfig tests', () => {
   test('should modify scan config', async () => {
@@ -729,6 +753,37 @@ describe('useModifyScanConfig tests', () => {
     expect(gqlError).toBeInTheDocument();
     expect(gqlError).toHaveTextContent(
       'There was an error in the request: Error: Oops. Something went wrong :(',
+    );
+  });
+  test('should modify nvt preferences', async () => {
+    const input = {
+      id: '314',
+      oid: '1.2.3.4',
+      preferenceValues: {'username:': {id: 1, value: 'admin', type: 'entry'}},
+    };
+    const [
+      queryMock,
+      resultFunc,
+    ] = createModifyScanConfigSetNvtPreferenceQueryMock();
+
+    const {render} = rendererWith({queryMocks: [queryMock]});
+
+    render(<ModifyScanConfigSetNvtPreferenceComponent input={input} />);
+
+    await wait();
+
+    const button = screen.queryByTestId('modify-nvt-preference');
+
+    fireEvent.click(button);
+
+    await wait();
+
+    expect(resultFunc).toHaveBeenCalled();
+
+    await wait();
+
+    expect(screen.getByTestId('notification')).toHaveTextContent(
+      'NVT preference modified.',
     );
   });
 });

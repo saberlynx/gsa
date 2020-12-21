@@ -35,6 +35,8 @@ import {
   MODIFY_SCAN_CONFIG_SET_COMMENT,
   MODIFY_SCAN_CONFIG_SET_FAMILY_SELECTION,
   MODIFY_SCAN_CONFIG_SET_NAME,
+  MODIFY_SCAN_CONFIG_SET_NVT_PREFERENCE,
+  MODIFY_SCAN_CONFIG_SET_NVT_SELECTION,
   MODIFY_SCAN_CONFIG_SET_SCANNER_PREFERENCE,
 } from '../scanconfigs';
 
@@ -444,5 +446,34 @@ export const createModifyScanConfigSetFamilySelectionQueryMock = errors =>
     MODIFY_SCAN_CONFIG_SET_FAMILY_SELECTION,
     createGenericMutationResult('modifyScanConfigSetFamilySelection'),
     {input: modifyScanConfigSetFamilySelectionInput},
+    errors,
+  );
+
+export const modifyScanConfigSetNvtPreferenceInput = {
+  id: '314',
+  nvtOid: '1.2.3.4',
+  name: '1.2.3.4:1:entry:username:',
+  value: 'admin',
+};
+
+export const createModifyScanConfigSetNvtPreferenceQueryMock = errors =>
+  createGenericQueryMock(
+    MODIFY_SCAN_CONFIG_SET_NVT_PREFERENCE,
+    createGenericMutationResult('modifyScanConfigSetNvtPreference'),
+    {input: modifyScanConfigSetNvtPreferenceInput},
+    errors,
+  );
+
+const modifyScanConfigSetNvtSelectionInput = {
+  id: '314',
+  family: 'a bunch of nvts',
+  nvtOids: ['1.2.3.4', '2.3.4.5'],
+};
+
+export const createModifyScanConfigSetNvtSelectionQueryMock = errors =>
+  createGenericQueryMock(
+    MODIFY_SCAN_CONFIG_SET_NVT_SELECTION,
+    createGenericMutationResult('modifyScanConfigSetNvtSelection'),
+    {input: modifyScanConfigSetNvtSelectionInput},
     errors,
   );

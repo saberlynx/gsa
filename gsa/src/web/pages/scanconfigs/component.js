@@ -353,7 +353,6 @@ const ScanConfigComponent = ({
     preferenceValues,
   }) => {
     const {editConfigFamilyDialogVisible, familyName} = state;
-
     handleInteraction();
 
     return modifyScanConfigSetNvtPreference({
