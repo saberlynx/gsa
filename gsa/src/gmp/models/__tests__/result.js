@@ -84,6 +84,7 @@ describe('Result model tests', () => {
     const elem = {
       nvt: {
         _oid: 'bar',
+        type: 'nvt',
       },
     };
     const result = Result.fromElement(elem);
