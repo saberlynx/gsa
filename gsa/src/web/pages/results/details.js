@@ -102,8 +102,8 @@ DerivedDiff.propTypes = {
 const ResultDetails = ({className, links = true, entity}) => {
   const result = entity;
 
-  const {nvt} = result;
-  const {oid, tags = {}, solution} = nvt;
+  const {information} = result;
+  const {oid, tags = {}, solution} = information;
 
   const is_oval = isDefined(oid) && oid.startsWith('oval:');
   const has_detection =
@@ -304,7 +304,7 @@ const ResultDetails = ({className, links = true, entity}) => {
                   {isDefined(oid) && oid.startsWith(DEFAULT_OID_VALUE) && (
                     <span>
                       <DetailsLink type="nvt" id={oid} textOnly={!links}>
-                        {renderNvtName(oid, nvt.name)}
+                        {renderNvtName(oid, information.name)}
                         {' OID: ' + oid}
                       </DetailsLink>
                     </span>
@@ -341,7 +341,7 @@ const ResultDetails = ({className, links = true, entity}) => {
         solutionType={solution?.type}
       />
 
-      <References links={links} nvt={nvt} />
+      <References links={links} information={information} />
     </Layout>
   );
 };

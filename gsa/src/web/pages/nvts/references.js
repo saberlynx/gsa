@@ -32,8 +32,8 @@ import TableBody from 'web/components/table/body';
 import TableData, {TableDataAlignTop} from 'web/components/table/data';
 import TableRow from 'web/components/table/row';
 
-const References = ({nvt, links = true}) => {
-  const {cves = [], bids = [], certs = [], xrefs = []} = nvt;
+const References = ({information, links = true}) => {
+  const {cves = [], bids = [], certs = [], xrefs = []} = information;
   const has_reference =
     cves.length > 0 || bids.length > 0 || certs.length > 0 || xrefs.length > 0;
   if (!has_reference) {
@@ -108,8 +108,8 @@ const References = ({nvt, links = true}) => {
 };
 
 References.propTypes = {
+  information: PropTypes.model.isRequired,
   links: PropTypes.bool,
-  nvt: PropTypes.model.isRequired,
 };
 
 export default References;

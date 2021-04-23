@@ -155,7 +155,7 @@ const NvtDetails = ({entity, links = true}) => {
         </DetailsBlock>
       )}
 
-      <References links={links} nvt={entity} />
+      <References links={links} information={entity} />
     </Layout>
   );
 };
