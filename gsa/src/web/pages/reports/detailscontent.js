@@ -167,7 +167,7 @@ const PageContent = ({
     isLoading &&
     !isDefined(reportError) &&
     !showThresholdMessage &&
-    (!isDefined(results.entities) || results.entities.length === 0);
+    !isDefined(results.entities); // stop showing loading indicator as soon as entities are defined even once, but do not check if it's zero since the length will go down to zero periodically
 
   const header_title = (
     <Divider>
