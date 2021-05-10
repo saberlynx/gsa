@@ -172,7 +172,6 @@ export const GET_AUDIT = gql`
         type
       }
       schedulePeriods
-      hostsOrdering
       observers {
         users
         roles {
@@ -280,7 +279,6 @@ export const GET_AUDITS = gql`
             type
           }
           schedulePeriods
-          hostsOrdering
           observers {
             users
             roles {

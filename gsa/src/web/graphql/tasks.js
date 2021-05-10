@@ -146,7 +146,6 @@ export const GET_TASK = gql`
         type
       }
       schedulePeriods
-      hostsOrdering
       userTags {
         count
         tags {
@@ -245,7 +244,6 @@ export const GET_TASKS = gql`
             name
             type
           }
-          hostsOrdering
           observers {
             users
             roles {
