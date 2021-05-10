@@ -116,9 +116,12 @@ export const GET_TASK = gql`
       comment
       owner
       preferences {
-        name
-        value
-        description
+        autoDeleteReports
+        createAssets
+        createAssetsApplyOverrides
+        createAssetsMinQod
+        maxConcurrentNvts
+        maxConcurrentHosts
       }
       schedule {
         name
@@ -214,9 +217,12 @@ export const GET_TASKS = gql`
           comment
           owner
           preferences {
-            name
-            value
-            description
+            autoDeleteReports
+            createAssets
+            createAssetsApplyOverrides
+            createAssetsMinQod
+            maxConcurrentNvts
+            maxConcurrentHosts
           }
           schedule {
             name

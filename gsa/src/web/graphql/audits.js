@@ -142,9 +142,12 @@ export const GET_AUDIT = gql`
       comment
       owner
       preferences {
-        name
-        value
-        description
+        autoDeleteReports
+        createAssets
+        createAssetsApplyOverrides
+        createAssetsMinQod
+        maxConcurrentNvts
+        maxConcurrentHosts
       }
       schedule {
         name
@@ -247,9 +250,12 @@ export const GET_AUDITS = gql`
           comment
           owner
           preferences {
-            name
-            value
-            description
+            autoDeleteReports
+            createAssets
+            createAssetsApplyOverrides
+            createAssetsMinQod
+            maxConcurrentNvts
+            maxConcurrentHosts
           }
           schedule {
             name
