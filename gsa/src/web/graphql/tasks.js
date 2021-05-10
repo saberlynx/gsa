@@ -87,7 +87,7 @@ export const GET_TASK = gql`
         lastReport {
           id
           severity
-          timestamp
+          creationTime
           scanStart
           scanEnd
         }
@@ -196,7 +196,7 @@ export const GET_TASKS = gql`
             lastReport {
               id
               severity
-              timestamp
+              creationTime
             }
             counts {
               total

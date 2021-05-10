@@ -107,7 +107,7 @@ export const GET_AUDIT = gql`
         lastReport {
           id
           severity
-          timestamp
+          creationTime
           scanStart
           scanEnd
           complianceCount {
@@ -119,7 +119,7 @@ export const GET_AUDIT = gql`
         currentReport {
           id
           scanStart
-          timestamp
+          creationTime
         }
         counts {
           total
@@ -212,7 +212,7 @@ export const GET_AUDITS = gql`
             lastReport {
               id
               severity
-              timestamp
+              creationTime
               scanStart
               scanEnd
               complianceCount {
@@ -224,7 +224,7 @@ export const GET_AUDITS = gql`
             currentReport {
               id
               scanStart
-              timestamp
+              creationTime
             }
             counts {
               total
