@@ -199,6 +199,7 @@ export const GET_TASKS = gql`
               id
               severity
               creationTime
+              scanStart
             }
             counts {
               total
