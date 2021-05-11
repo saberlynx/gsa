@@ -173,7 +173,7 @@ const TaskDetails = ({entity, links = true}) => {
                 </TableRow>
               )}
               {hasValue(scanConfig) &&
-                scanConfig.scanConfigType === OPENVAS_SCAN_CONFIG_TYPE &&
+                scanConfig.scanConfigType === 'OPENVAS' &&
                 hasValue(maxConcurrentNvts) && (
                   <TableRow>
                     <TableData>
@@ -183,7 +183,7 @@ const TaskDetails = ({entity, links = true}) => {
                   </TableRow>
                 )}
               {hasValue(scanConfig) &&
-                scanConfig.scanConfigType === OPENVAS_SCAN_CONFIG_TYPE &&
+                scanConfig.scanConfigType === 'OPENVAS' &&
                 hasValue(maxConcurrentHosts) && (
                   <TableRow>
                     <TableData>
