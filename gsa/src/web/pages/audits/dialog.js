@@ -107,7 +107,6 @@ const AuditDialog = ({
   capabilities,
   comment = '',
   fromPolicy = false,
-  hostsOrdering = HOSTS_ORDERING_SEQUENTIAL,
   in_assets = YES_VALUE,
   isLoadingScanners = false,
   maxChecks = DEFAULT_MAX_CHECKS,
@@ -125,7 +124,6 @@ const AuditDialog = ({
   scheduleId = UNSET_VALUE,
   schedulePeriods = NO_VALUE,
   schedules = [],
-  sourceIface = '',
   targetId,
   targets,
   audit,
@@ -163,14 +161,12 @@ const AuditDialog = ({
     auto_delete,
     auto_delete_data,
     comment,
-    hostsOrdering,
     in_assets,
     maxChecks,
     maxHosts,
     name,
     scannerId,
     scannerType,
-    sourceIface,
     audit,
   };
 
@@ -330,34 +326,6 @@ const AuditDialog = ({
                   onChange={onChange}
                 />
               </FormGroup>
-              <FormGroup titleSize="4" title={_('Network Source Interface')}>
-                <TextField
-                  name="sourceIface"
-                  value={state.sourceIface}
-                  onChange={onValueChange}
-                />
-              </FormGroup>
-              <FormGroup titleSize="4" title={_('Order for target hosts')}>
-                <Select
-                  name="hostsOrdering"
-                  items={[
-                    {
-                      value: 'sequential',
-                      label: _('Sequential'),
-                    },
-                    {
-                      value: 'random',
-                      label: _('Random'),
-                    },
-                    {
-                      value: 'reverse',
-                      label: _('Reverse'),
-                    },
-                  ]}
-                  value={state.hostsOrdering}
-                  onChange={onValueChange}
-                />
-              </FormGroup>
               <FormGroup
                 titleSize="4"
                 title={_('Maximum concurrently executed NVTs per host')}
@@ -403,7 +371,6 @@ AuditDialog.propTypes = {
   capabilities: PropTypes.capabilities.isRequired,
   comment: PropTypes.string,
   fromPolicy: PropTypes.bool,
-  hostsOrdering: PropTypes.oneOf(['sequential', 'random', 'reverse']),
   in_assets: PropTypes.yesno,
   isLoadingScanners: PropTypes.bool,
   maxChecks: PropTypes.number,
@@ -416,7 +383,6 @@ AuditDialog.propTypes = {
   scheduleId: PropTypes.idOrZero,
   schedulePeriods: PropTypes.yesno,
   schedules: PropTypes.array,
-  sourceIface: PropTypes.string,
   targetId: PropTypes.idOrZero,
   targets: PropTypes.array,
   title: PropTypes.string,

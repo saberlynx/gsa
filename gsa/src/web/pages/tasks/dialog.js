@@ -40,8 +40,6 @@ import {
 
 import {
   FULL_AND_FAST_SCAN_CONFIG_ID,
-  OPENVAS_SCAN_CONFIG_TYPE,
-  OSP_SCAN_CONFIG_TYPE,
   filterEmptyScanConfig,
   SCAN_CONFIG_TYPE,
 } from 'gmp/models/scanconfig';
@@ -140,7 +138,6 @@ const TaskDialog = ({
   comment = '',
   config_id,
   error,
-  hosts_ordering = HOSTS_ORDERING_SEQUENTIAL,
   in_assets = YES_VALUE,
   isLoadingAlerts = false,
   isLoadingConfigs = false,
@@ -163,7 +160,6 @@ const TaskDialog = ({
   schedule_id = UNSET_VALUE,
   schedule_periods = NO_VALUE,
   schedules = [],
-  source_iface = '',
   tags = [],
   target_id,
   targets,
@@ -270,7 +266,6 @@ const TaskDialog = ({
     auto_delete_data,
     comment,
     config_id,
-    hosts_ordering,
     in_assets,
     max_checks,
     max_hosts,
@@ -279,7 +274,6 @@ const TaskDialog = ({
     scanner_type,
     scanner_id,
     schedule_periods,
-    source_iface,
     tag_id,
     tags,
     task,
@@ -510,34 +504,6 @@ const TaskDialog = ({
                     />
                   </div>
                 </FormGroup>
-                <FormGroup titleSize="4" title={_('Network Source Interface')}>
-                  <TextField
-                    name="source_iface"
-                    value={state.source_iface}
-                    onChange={onValueChange}
-                  />
-                </FormGroup>
-                <FormGroup titleSize="4" title={_('Order for target hosts')}>
-                  <Select
-                    name="hosts_ordering"
-                    items={[
-                      {
-                        value: 'sequential',
-                        label: _('Sequential'),
-                      },
-                      {
-                        value: 'random',
-                        label: _('Random'),
-                      },
-                      {
-                        value: 'reverse',
-                        label: _('Reverse'),
-                      },
-                    ]}
-                    value={state.hosts_ordering}
-                    onChange={onValueChange}
-                  />
-                </FormGroup>
                 <FormGroup
                   titleSize="4"
                   title={_('Maximum concurrently executed NVTs per host')}
@@ -626,7 +592,6 @@ TaskDialog.propTypes = {
   comment: PropTypes.string,
   config_id: PropTypes.idOrZero,
   error: PropTypes.string,
-  hosts_ordering: PropTypes.oneOf(['sequential', 'random', 'reverse']),
   in_assets: PropTypes.yesno,
   isLoadingAlerts: PropTypes.bool,
   isLoadingConfigs: PropTypes.bool,
@@ -644,7 +609,6 @@ TaskDialog.propTypes = {
   schedule_id: PropTypes.idOrZero,
   schedule_periods: PropTypes.yesno,
   schedules: PropTypes.array,
-  source_iface: PropTypes.string,
   tag_id: PropTypes.id,
   tags: PropTypes.array,
   target_id: PropTypes.idOrZero,

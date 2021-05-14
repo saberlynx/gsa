@@ -253,7 +253,6 @@ const AuditComponent = ({
     auto_delete_data,
     comment,
     policyId,
-    hostsOrdering,
     id,
     in_assets,
     maxChecks,
@@ -263,7 +262,6 @@ const AuditComponent = ({
     scannerType = OPENVAS_SCANNER_TYPE,
     scheduleId,
     schedulePeriods,
-    sourceIface,
     targetId,
     audit,
   }) => {
@@ -288,7 +286,6 @@ const AuditComponent = ({
         applyOverrides,
         comment,
         policyId,
-        hostsOrdering,
         id,
         inAssets: in_assets,
         maxChecks,
@@ -300,7 +297,6 @@ const AuditComponent = ({
         scheduleId,
         schedulePeriods,
         targetId,
-        sourceIface,
       })
         .then(onSaved, onSaveError)
         .then(() => closeAuditDialog());
@@ -314,7 +310,6 @@ const AuditComponent = ({
       autoDeleteData: auto_delete_data,
       comment,
       policyId,
-      hostsOrdering,
       inAssets: in_assets,
       maxChecks,
       maxHosts,
@@ -324,7 +319,6 @@ const AuditComponent = ({
       scannerId,
       scheduleId,
       schedulePeriods,
-      sourceIface,
       targetId: targetId,
     })
       .then(onCreated, onCreateError)
@@ -369,7 +363,6 @@ const AuditComponent = ({
           autoDeleteData: audit.autoDeleteData,
           comment: audit.comment,
           policyId: hasId(audit.config) ? audit.config.id : undefined,
-          hostsOrdering: audit.hostsOrdering,
           id: audit.id,
           inAssets: audit.inAssets,
           maxChecks: audit.maxChecks,
@@ -379,7 +372,6 @@ const AuditComponent = ({
           scannerId: hasId(audit.scanner) ? audit.scanner.id : undefined,
           scheduleId,
           schedulePeriods,
-          sourceIface: audit.source_iface,
           targetId: hasId(audit.target) ? audit.target.id : undefined,
           audit,
           title: _('Edit Audit {{name}}', audit),
@@ -400,7 +392,6 @@ const AuditComponent = ({
           autoDeleteData: undefined,
           comment: undefined,
           policyId: undefined,
-          hostsOrdering: undefined,
           id: undefined,
           inAssets: undefined,
           maxChecks: undefined,
@@ -411,7 +402,6 @@ const AuditComponent = ({
           scanner_type: defaultScannerType,
           scheduleId: defaultScheduleId,
           schedulePeriods: undefined,
-          sourceIface: undefined,
           targetId: defaultTargetId,
           audit: undefined,
           title: _('New Audit'),
@@ -527,7 +517,6 @@ const AuditComponent = ({
     autoDeleteData,
     policyId,
     comment,
-    hostsOrdering,
     id,
     inAssets,
     maxChecks,
@@ -536,7 +525,6 @@ const AuditComponent = ({
     scannerId,
     scheduleId,
     schedulePeriods,
-    sourceIface,
     targetId,
     audit,
     auditDialogVisible,
@@ -600,7 +588,6 @@ const AuditComponent = ({
                             auto_delete_data={autoDeleteData}
                             comment={comment}
                             policyId={policyId}
-                            hostsOrdering={hostsOrdering}
                             id={id}
                             in_assets={inAssets}
                             isLoadingAlerts={isLoadingAlerts}
@@ -617,7 +604,6 @@ const AuditComponent = ({
                             scheduleId={scheduleId}
                             schedulePeriods={schedulePeriods}
                             schedules={schedules}
-                            sourceIface={sourceIface}
                             targetId={targetId}
                             targets={targets}
                             audit={audit}

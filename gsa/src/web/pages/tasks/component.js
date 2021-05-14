@@ -27,10 +27,7 @@ import logger from 'gmp/log';
 
 import date from 'gmp/models/date';
 import {ALL_FILTER} from 'gmp/models/filter';
-import {
-  BASE_SCAN_CONFIG_ID,
-  FULL_AND_FAST_SCAN_CONFIG_ID,
-} from 'gmp/models/scanconfig';
+import {FULL_AND_FAST_SCAN_CONFIG_ID} from 'gmp/models/scanconfig';
 import {OPENVAS_DEFAULT_SCANNER_ID} from 'gmp/models/scanner';
 import {TASK_STATUS} from 'gmp/models/task';
 
@@ -372,7 +369,6 @@ const TaskComponent = ({
   };
 
   const handleSaveTask = ({
-    add_tag,
     alert_ids,
     alterable,
     auto_delete,
@@ -380,7 +376,6 @@ const TaskComponent = ({
     apply_overrides,
     comment,
     config_id,
-    hosts_ordering,
     id,
     in_assets,
     min_qod,
@@ -388,11 +383,8 @@ const TaskComponent = ({
     max_hosts,
     name,
     scanner_id,
-    scanner_type,
     schedule_id,
     schedule_periods,
-    source_iface,
-    tag_id,
     target_id,
     task,
   }) => {
@@ -423,7 +415,7 @@ const TaskComponent = ({
           createAssets: in_assets,
           createAssetsApplyOverrides: apply_overrides,
           createAssetsMinQod: min_qod,
-          autoDeleteReports: auto_delete_data,
+          autoDeleteReports: auto_delete === 'keep' ? auto_delete_data : null,
           maxConcurrentNvts: max_checks,
           maxConcurrentHosts: max_hosts,
         },
@@ -448,7 +440,7 @@ const TaskComponent = ({
         createAssets: in_assets,
         createAssetsApplyOverrides: apply_overrides,
         createAssetsMinQod: min_qod,
-        autoDeleteReports: auto_delete_data,
+        autoDeleteReports: auto_delete === 'keep' ? auto_delete_data : null,
         maxConcurrentNvts: max_checks,
         maxConcurrentHosts: max_hosts,
       },
@@ -501,7 +493,6 @@ const TaskComponent = ({
           taskDialogVisible: true,
           error: undefined, // remove old errors
           minQod: task.minQod,
-          sourceIface: task.sourceIface,
           schedulePeriods,
           scannerId: hasId(task.scanner) ? task.scanner.id : undefined,
           name: task.name,
@@ -514,7 +505,6 @@ const TaskComponent = ({
           autoDeleteData: task.autoDeleteData,
           comment: task.comment,
           configId: hasId(task.config) ? task.config.id : undefined,
-          hostsOrdering: task.hostsOrdering,
           id: task.id,
           inAssets: task.inAssets,
           maxChecks: task.maxChecks,
@@ -545,7 +535,6 @@ const TaskComponent = ({
           autoDelete: undefined,
           autoDeleteData: undefined,
           comment: undefined,
-          hostsOrdering: undefined,
           id: undefined,
           maxChecks: undefined,
           maxHosts: undefined,
@@ -812,7 +801,6 @@ const TaskComponent = ({
     maxHosts,
     minQod,
     schedulePeriods,
-    sourceIface,
     autoDelete,
     autoDeleteData,
     comment,
@@ -821,7 +809,6 @@ const TaskComponent = ({
     task,
     title,
     name,
-    hostsOrdering,
     portListId,
     alertId,
     sshCredential,
@@ -899,7 +886,6 @@ const TaskComponent = ({
                             comment={comment}
                             config_id={configId}
                             error={error}
-                            hosts_ordering={hostsOrdering}
                             id={id}
                             in_assets={inAssets}
                             isLoadingAlerts={isLoadingAlerts}
@@ -918,7 +904,6 @@ const TaskComponent = ({
                             schedule_id={scheduleId}
                             schedule_periods={schedulePeriods}
                             schedules={schedules}
-                            source_iface={sourceIface}
                             tag_id={tagId}
                             tags={tags}
                             target_id={targetId}
