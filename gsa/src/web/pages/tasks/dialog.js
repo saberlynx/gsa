@@ -67,7 +67,7 @@ import PropTypes from 'web/utils/proptypes';
 import {renderSelectItems, UNSET_VALUE} from 'web/utils/render';
 import useCapabilities from 'web/utils/useCapabilities';
 
-import AddResultsToAssetsGroup from './addresultstoassetsgroup';
+import AddResultsToAssetsGroup, {toBoolean} from './addresultstoassetsgroup';
 import AutoDeleteReportsGroup from './autodeletereportsgroup';
 
 const sort_scan_configs = (scan_configs = []) => {
@@ -426,8 +426,11 @@ const TaskDialog = ({
             <FormGroup title={_('Apply Overrides')}>
               <YesNoRadio
                 name="apply_overrides"
-                disabled={state.in_assets !== YES_VALUE}
+                disabled={!state.in_assets}
                 value={state.apply_overrides}
+                yesValue={true}
+                noValue={false}
+                convert={toBoolean}
                 onChange={onValueChange}
               />
             </FormGroup>
@@ -436,7 +439,7 @@ const TaskDialog = ({
               <Spinner
                 name="min_qod"
                 size="4"
-                disabled={state.in_assets !== YES_VALUE}
+                disabled={!state.in_assets}
                 type="int"
                 min="0"
                 max="100"

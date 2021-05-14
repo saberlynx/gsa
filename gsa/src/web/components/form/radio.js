@@ -80,6 +80,7 @@ const RadioComponent = ({title, children, disabled, ...other}) => {
     } else {
       newVal = event.target.value;
     }
+
     setVal(newVal);
     notifyChange(newVal);
   };

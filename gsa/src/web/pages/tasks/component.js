@@ -34,7 +34,7 @@ import {TASK_STATUS} from 'gmp/models/task';
 import {NO_VALUE} from 'gmp/parser';
 
 import {map} from 'gmp/utils/array';
-import {isDefined} from 'gmp/utils/identity';
+import {hasValue, isDefined} from 'gmp/utils/identity';
 import {selectSaveId, hasId} from 'gmp/utils/id';
 
 import EntityComponent from 'web/entity/component';
@@ -492,7 +492,7 @@ const TaskComponent = ({
         updateState({
           taskDialogVisible: true,
           error: undefined, // remove old errors
-          minQod: task.minQod,
+          minQod: task.preferences?.createAssetsMinQod,
           schedulePeriods,
           scannerId: hasId(task.scanner) ? task.scanner.id : undefined,
           name: task.name,
@@ -500,15 +500,15 @@ const TaskComponent = ({
           target_id: hasId(task.target) ? task.target.id : undefined,
           alertIds: map(task.alerts, alert => alert.id),
           alterable: task.alterable,
-          applyOverrides: task.applyOverrides,
-          autoDelete: task.autoDelete,
-          autoDeleteData: task.autoDeleteData,
+          applyOverrides: task.preferences?.createAssetsApplyOverrides,
+          autoDelete: hasValue(task.preferences?.autoDeleteReports),
+          autoDeleteData: task.preferences?.autoDeleteReports,
           comment: task.comment,
           configId: hasId(task.config) ? task.config.id : undefined,
           id: task.id,
-          inAssets: task.inAssets,
-          maxChecks: task.maxChecks,
-          maxHosts: task.maxHosts,
+          inAssets: task.preferences?.createAssets,
+          maxChecks: task.preferences?.maxConcurrentNvts,
+          maxHosts: task.preferences?.maxConcurrentNvts,
           title: _('Edit Task {{name}}', task),
           task,
         }),
