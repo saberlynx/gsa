@@ -43,6 +43,7 @@ import {
   OPENVAS_SCAN_CONFIG_TYPE,
   OSP_SCAN_CONFIG_TYPE,
   filterEmptyScanConfig,
+  SCAN_CONFIG_TYPE,
 } from 'gmp/models/scanconfig';
 
 import {forEach, first} from 'gmp/utils/array';
@@ -73,8 +74,8 @@ import AutoDeleteReportsGroup from './autodeletereportsgroup';
 
 const sort_scan_configs = (scan_configs = []) => {
   const sorted_scan_configs = {
-    [OPENVAS_SCAN_CONFIG_TYPE]: [],
-    [OSP_SCAN_CONFIG_TYPE]: [],
+    [SCAN_CONFIG_TYPE.openvas]: [],
+    [SCAN_CONFIG_TYPE.osp]: [],
   };
 
   scan_configs = scan_configs.filter(filterEmptyScanConfig);
@@ -218,13 +219,13 @@ const TaskDialog = ({
       ) {
         onScanConfigChange(
           selectSaveId(
-            sorted_scan_configs[OPENVAS_SCAN_CONFIG_TYPE],
+            sorted_scan_configs[SCAN_CONFIG_TYPE.openvas],
             FULL_AND_FAST_SCAN_CONFIG_ID,
           ),
         );
       } else if (scanner_type === OSP_SCANNER_TYPE) {
         onScanConfigChange(
-          selectSaveId(sorted_scan_configs[OSP_SCAN_CONFIG_TYPE], UNSET_VALUE),
+          selectSaveId(sorted_scan_configs[SCAN_CONFIG_TYPE.osp], UNSET_VALUE),
         );
       } else {
         onScanConfigChange(UNSET_VALUE);
@@ -242,11 +243,11 @@ const TaskDialog = ({
   const sorted_scan_configs = sort_scan_configs(scan_configs);
 
   const osp_scan_config_items = renderSelectItems(
-    sorted_scan_configs[OSP_SCAN_CONFIG_TYPE],
+    sorted_scan_configs[SCAN_CONFIG_TYPE.osp],
   );
 
   const openvas_scan_config_items = renderSelectItems(
-    sorted_scan_configs[OPENVAS_SCAN_CONFIG_TYPE],
+    sorted_scan_configs[SCAN_CONFIG_TYPE.openvas],
   );
 
   const alert_items = renderSelectItems(alerts);
@@ -305,11 +306,11 @@ const TaskDialog = ({
     >
       {({values: state, onValueChange}) => {
         const osp_config_id = selectSaveId(
-          sorted_scan_configs[OSP_SCAN_CONFIG_TYPE],
+          sorted_scan_configs[SCAN_CONFIG_TYPE.osp],
           state.config_id,
         );
         const openvas_config_id = selectSaveId(
-          sorted_scan_configs[OPENVAS_SCAN_CONFIG_TYPE],
+          sorted_scan_configs[SCAN_CONFIG_TYPE.openvas],
           state.config_id,
         );
 

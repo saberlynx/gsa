@@ -27,7 +27,10 @@ import logger from 'gmp/log';
 
 import date from 'gmp/models/date';
 import {ALL_FILTER} from 'gmp/models/filter';
-import {FULL_AND_FAST_SCAN_CONFIG_ID} from 'gmp/models/scanconfig';
+import {
+  BASE_SCAN_CONFIG_ID,
+  FULL_AND_FAST_SCAN_CONFIG_ID,
+} from 'gmp/models/scanconfig';
 import {OPENVAS_DEFAULT_SCANNER_ID} from 'gmp/models/scanner';
 import {TASK_STATUS} from 'gmp/models/task';
 
@@ -414,22 +417,20 @@ const TaskComponent = ({
       const mutationData = {
         alertIds: alert_ids,
         alterable,
-        applyOverrides: apply_overrides,
-        autoDelete: auto_delete,
-        autoDeleteData: auto_delete_data,
         comment,
-        configId: statusIsNew ? config_id : undefined,
-        hostsOrdering: hosts_ordering,
-        inAssets: in_assets,
-        maxChecks: max_checks,
-        maxHosts: max_hosts,
-        minQod: min_qod,
         name,
+        preferences: {
+          createAssets: in_assets,
+          createAssetsApplyOverrides: apply_overrides,
+          createAssetsMinQod: min_qod,
+          autoDeleteReports: auto_delete_data,
+          maxConcurrentNvts: max_checks,
+          maxConcurrentHosts: max_hosts,
+        },
+        scanConfigId: statusIsNew ? config_id : undefined,
         scannerId: statusIsNew ? scanner_id : undefined,
-        scannerType: statusIsNew ? scanner_type : undefined,
         scheduleId: schedule_id,
         schedulePeriods: schedule_periods,
-        sourceIface: source_iface,
         targetId: target_id,
         id,
       };
@@ -441,22 +442,20 @@ const TaskComponent = ({
     const mutationData = {
       alertIds: alert_ids,
       alterable,
-      applyOverrides: apply_overrides,
-      autoDelete: auto_delete,
-      autoDeleteData: auto_delete_data,
       comment,
-      configId: config_id,
-      hostsOrdering: hosts_ordering,
-      inAssets: in_assets,
-      maxChecks: max_checks,
-      maxHosts: max_hosts,
-      minQod: min_qod,
       name,
+      preferences: {
+        createAssets: in_assets,
+        createAssetsApplyOverrides: apply_overrides,
+        createAssetsMinQod: min_qod,
+        autoDeleteReports: auto_delete_data,
+        maxConcurrentNvts: max_checks,
+        maxConcurrentHosts: max_hosts,
+      },
+      scanConfigId: config_id,
       scannerId: scanner_id,
-      scannerType: scanner_type,
       scheduleId: schedule_id,
       schedulePeriods: schedule_periods,
-      sourceIface: source_iface,
       targetId: target_id,
     };
     return createTask(mutationData)
