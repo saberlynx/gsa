@@ -324,7 +324,7 @@ const AuditDialog = ({
               <FormGroup titleSize="2" title={_('Policy')}>
                 <Select
                   name="policyId"
-                  disabled={!changeAudit || hasAudit || fromPolicy}
+                  disabled={!changeAudit || fromPolicy}
                   items={policyItems}
                   value={policyId}
                   onChange={onChange}
