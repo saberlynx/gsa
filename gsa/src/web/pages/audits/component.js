@@ -289,7 +289,7 @@ const AuditComponent = ({
           createAssets: in_assets,
           createAssetsApplyOverrides: applyOverrides,
           createAssetsMinQod: minQod,
-          autoDeleteReports: auto_delete === 'keep' ? auto_delete_data : null,
+          autoDeleteReports: auto_delete ? auto_delete_data : null,
           maxConcurrentNvts: maxChecks,
           maxConcurrentHosts: maxHosts,
         },
@@ -312,7 +312,7 @@ const AuditComponent = ({
         createAssets: in_assets,
         createAssetsApplyOverrides: applyOverrides,
         createAssetsMinQod: minQod,
-        autoDeleteReports: auto_delete === 'keep' ? auto_delete_data : null,
+        autoDeleteReports: auto_delete ? auto_delete_data : null,
         maxConcurrentNvts: maxChecks,
         maxConcurrentHosts: maxHosts,
       },
@@ -353,15 +353,13 @@ const AuditComponent = ({
         ? audit.schedule_periods
         : undefined;
 
-      console.log(audit);
-
       dispatchState(
         updateState({
           auditDialogVisible: true,
           alertIds: map(audit.alerts, alert => alert.id),
           alterable: audit.alterable,
           applyOverrides: audit.preferences?.createAssetsApplyOverrides,
-          autoDelete: !hasValue(audit.preferences?.autoDeleteReports),
+          autoDelete: hasValue(audit.preferences?.autoDeleteReports),
           autoDeleteData: hasValue(audit.preferences?.autoDeleteReports)
             ? audit.preferences.autoDeleteReports
             : undefined,
