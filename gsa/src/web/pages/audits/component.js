@@ -29,7 +29,7 @@ import {YES_VALUE} from 'gmp/parser';
 
 import {map} from 'gmp/utils/array';
 import {hasId} from 'gmp/utils/id';
-import {isDefined} from 'gmp/utils/identity';
+import {hasValue, isDefined} from 'gmp/utils/identity';
 
 import {
   OPENVAS_DEFAULT_SCANNER_ID,
@@ -358,16 +358,18 @@ const AuditComponent = ({
           auditDialogVisible: true,
           alertIds: map(audit.alerts, alert => alert.id),
           alterable: audit.alterable,
-          applyOverrides: audit.applyOverrides,
-          autoDelete: audit.autoDelete,
-          autoDeleteData: audit.autoDeleteData,
+          applyOverrides: audit.preferences?.createAssetsApplyOverrides,
+          autoDelete: !hasValue(audit.preferences?.autoDeleteReports),
+          autoDeleteData: hasValue(audit.preferences?.autoDeleteReports)
+            ? audit.preferences.autoDeleteReports
+            : undefined,
           comment: audit.comment,
           policyId: hasId(audit.config) ? audit.config.id : undefined,
           id: audit.id,
-          inAssets: audit.inAssets,
-          maxChecks: audit.maxChecks,
-          maxHosts: audit.maxHosts,
-          minQod: audit.minQod,
+          inAssets: audit.preferences?.createAssets,
+          maxChecks: audit.preferences?.maxConcurrentNvts,
+          maxHosts: audit.preferences?.maxConcurrentHosts,
+          minQod: audit.preferences?.createAssetsMinQod,
           name: audit.name,
           scannerId: hasId(audit.scanner) ? audit.scanner.id : undefined,
           scheduleId,

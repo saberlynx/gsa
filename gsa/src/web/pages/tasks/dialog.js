@@ -127,17 +127,17 @@ ScannerSelect.propTypes = {
 };
 
 const TaskDialog = ({
-  add_tag = NO_VALUE,
+  add_tag = false,
   alert_ids = [],
   alerts = [],
-  alterable = NO_VALUE,
-  apply_overrides = YES_VALUE,
-  auto_delete = AUTO_DELETE_NO,
+  alterable = false,
+  apply_overrides = true,
+  auto_delete = false,
   auto_delete_data = AUTO_DELETE_KEEP_DEFAULT_VALUE,
   comment = '',
   config_id,
   error,
-  in_assets = YES_VALUE,
+  in_assets = true,
   isLoadingAlerts = false,
   isLoadingConfigs = false,
   isLoadingScanners = false,
