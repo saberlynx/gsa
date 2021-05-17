@@ -330,9 +330,13 @@ const TaskComponent = ({
         name: inputTask ? inputTask.name : _('Unnamed'),
         comment: inputTask ? inputTask.comment : '',
         id: inputTask ? inputTask.id : undefined,
-        inAssets: inputTask ? inputTask.inAssets : undefined,
-        autoDelete: inputTask ? inputTask.autoDelete : undefined,
-        autoDeleteData: inputTask ? inputTask.autoDeleteData : undefined,
+        inAssets: inputTask?.preferences?.createAssets,
+        autoDelete: hasValue(inputTask?.preferences?.autoDeleteReports)
+          ? inputTask.autoDelete
+          : undefined,
+        autoDeleteData: inputTask
+          ? inputTask.preferences?.autoDeleteReports
+          : undefined,
         title: inputTask
           ? _('Edit Container Task {{name}}', inputTask)
           : _('New Container Task'),
@@ -359,6 +363,9 @@ const TaskComponent = ({
         id: data.id,
         name: data.name,
         comment: data.comment,
+        preferences: {
+          createAssets: data.in_assets,
+        },
       })
         .then(onContainerSaved, onContainerSaveError)
         .then(() => closeContainerTaskDialog());
