@@ -22,7 +22,6 @@ import _ from 'gmp/locale';
 
 import {
   AUTO_DELETE_KEEP_DEFAULT_VALUE,
-  AUTO_DELETE_NO,
   DEFAULT_MAX_CHECKS,
   DEFAULT_MAX_HOSTS,
 } from 'gmp/models/audit';
