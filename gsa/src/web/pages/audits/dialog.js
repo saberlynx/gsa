@@ -52,7 +52,9 @@ import NewIcon from 'web/components/icon/newicon';
 import Divider from 'web/components/layout/divider';
 import Layout from 'web/components/layout/layout';
 
-import AddResultsToAssetsGroup from 'web/pages/tasks/addresultstoassetsgroup';
+import AddResultsToAssetsGroup, {
+  toBoolean,
+} from 'web/pages/tasks/addresultstoassetsgroup';
 import AutoDeleteReportsGroup from 'web/pages/tasks/autodeletereportsgroup';
 
 import PropTypes from 'web/utils/proptypes';
@@ -286,6 +288,9 @@ const AuditDialog = ({
                   name="alterable"
                   disabled={audit && !audit.isNew()}
                   value={state.alterable}
+                  yesValue={true}
+                  noValue={false}
+                  convert={toBoolean}
                   onChange={onValueChange}
                 />
               </FormGroup>

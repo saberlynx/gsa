@@ -353,6 +353,8 @@ const AuditComponent = ({
         ? audit.schedule_periods
         : undefined;
 
+      console.log(audit);
+
       dispatchState(
         updateState({
           auditDialogVisible: true,
